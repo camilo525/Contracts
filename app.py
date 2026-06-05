@@ -1,10 +1,23 @@
 import streamlit as st
-import pypdf
-import re
-from openai import OpenAI
+import sys
 
-# --- CONFIGURACIÓN DE LA PÁGINA ---
-st.set_page_config(page_title="Thrust Aviation - AI Live Auditor", layout="wide")
+# --- MÓDULO DE AUTO-INSTALACIÓN IN LINE ---
+# Instala las librerías directamente si Streamlit Cloud no las encuentra
+try:
+    import pypdf
+except ImportError:
+    import os
+    os.system(f"{sys.executable} -m pip install pypdf")
+    import pypdf
+
+try:
+    from openai import OpenAI
+except ImportError:
+    import os
+    os.system(f"{sys.executable} -m pip install openai")
+    from openai import OpenAI
+
+import re
 
 # --- CONFIGURACIÓN DE LA PÁGINA ---
 st.set_page_config(page_title="Thrust Aviation - AI Live Auditor", layout="wide")
@@ -17,7 +30,6 @@ st.markdown("This engine extracts values from the Operator's contract, applies t
 st.divider()
 
 # --- CONFIGURACIÓN DE CLIENTE IA ---
-# Para que funcione, debes colocar tu API Key de OpenAI en la barra lateral o en los Secrets de Streamlit
 api_key = st.sidebar.text_input("Enter OpenAI API Key:", type="password")
 if not api_key:
     st.sidebar.warning("⚠️ Please enter your OpenAI API Key to enable the AI Analysis Engine.")
@@ -55,14 +67,11 @@ if op_file and cl_file:
     else:
         with st.spinner("🤖 AI is reading and cross-referencing both contracts... Please wait."):
             
-            # 1. Extraer texto real de los archivos cargados
             operator_text = get_pdf_text(op_file)
             client_text = get_pdf_text(cl_file)
             
-            # 2. IA extrae de forma abierta el valor del operador usando LLM
             client = OpenAI(api_key=api_key)
             
-            # Prompt para extraer la cifra exacta
             try:
                 val_response = client.chat.completions.create(
                     model="gpt-4o-mini",
@@ -72,11 +81,9 @@ if op_file and cl_file:
                     ]
                 )
                 extracted_string = val_response.choices[0].message.content.strip()
-                # Limpiar caracteres por si acaso
                 extracted_string = re.sub(r'[^\d.]', '', extracted_string)
                 operator_net_cost = float(extracted_string)
             except:
-                # Fallback por expresión regular si la API falla en el número
                 operator_net_cost = 14900.00
             
             # --- CÁLCULO DE LA TARJETA DE CRÉDITO (4%) ---
@@ -84,4 +91,61 @@ if op_file and cl_file:
             calculated_fee = operator_net_cost * cc_rate
             total_cc_hold = operator_net_cost + calculated_fee
 
-            #
+            st.subheader("💳 Dynamic Credit Card Hold Summary")
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Extracted Operator Cost ($V$)", f"${operator_net_cost:,.2f} USD")
+            c2.metric("Calculated 4% Processing Fee", f"${calculated_fee:,.2f} USD")
+            c3.metric("TOTAL CC HOLD AMOUNT", f"${total_cc_hold:,.2f} USD", delta="Target for Tradeshift")
+            
+            st.divider()
+            
+            st.subheader("🛡️ AI Live Compliance & Risk Assessment")
+            
+            analysis_prompt = f"""
+            You are the Risk Auditor for Thrust Aviation. Compare the following two contracts.
+            Our Golden Rule: The Client Contract must ALWAYS be MORE RESTRICTIVE or EQUAL to the Operator Contract to protect us from financial liability.
+            
+            Analyze these specific items based on our master rules:
+            - Cancellation Window & Penalties: Domestic Round-Trips must have a ladder (>5 days: 30%, 5d-72h: 50%, <72h: 100%). International/One-ways are 100% non-refundable immediately.
+            - Peak Travel Dates: Look if flight dates match peak travel seasons.
+            - Itinerary, Aircraft Type, and Schedules.
+            - Late Passenger Policy: 30-minute cutoff.
+            
+            Output your results in clear markdown. If the Client contract leaves us vulnerable (less restrictive), mark it as a '🔴 CRITICAL DEFICIT'. If there's a minor risk or peak date issue, mark it as '🟡 WARNING'. If we are safely protected, mark it as '🟢 ALIGNED'.
+            
+            --- OPERATOR CONTRACT TEXT ---
+            {operator_text[:4000]}
+            
+            --- CLIENT CONTRACT TEXT ---
+            {client_text[:4000]}
+            """
+            
+            ai_analysis = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "You are a professional aviation contract compliance auditor. Provide a detailed, analytical report in English using clear flags (🔴, 🟡, 🟢)."},
+                    {"role": "user", "content": analysis_prompt}
+                ]
+            )
+            
+            st.markdown(ai_analysis.choices[0].message.content)
+            st.divider()
+            
+            st.subheader("🚀 Execution Panel")
+            col_btn1, col_btn2 = st.columns(2)
+            with col_btn1:
+                st.text_input("Copy this calculated figure for your records:", value=f"{total_cc_hold:.2f}")
+            with col_btn2:
+                tradeshift_url = "https://platform.tradeshift.com/"
+                st.markdown(
+                    f'<a href="{tradeshift_url}" target="_blank">'
+                    f'<button style="background-color:#FF4B4B; color:white; border:none; padding:12px 24px; '
+                    f'border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px;">'
+                    f'🌐 Open Tradeshift Portal</button></a>', 
+                    unsafe_allow_html=True
+                )
+else:
+    st.warning("📥 Please upload BOTH the Operator and Client PDF contracts above to execute the real-time AI compliance audit.")
+
+st.sidebar.markdown("---")
+st.sidebar.caption("Thrust Aviation Live AI Engine v2.1")
