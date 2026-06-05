@@ -12,14 +12,17 @@ st.markdown("---")
 # 1. Zona de Carga de Archivos (UI)
 col1, col2 = st.columns(2)
 
-with col1:
-    operator_file = st.file_uploader("📁 Upload Operator Contract (PDF)", type=["pdf"])
-
-with col2:
-    client_file = st.file_uploader("📁 Upload Client Contract (PDF)", type=["pdf"])
-
-st.markdown("---")
-
+with col_btn1:
+        # Botón para copiar la cifra exacta fácilmente
+        st.text_input("Copy Hold Amount for Tradeshift:", value=f"{hold_amount:.2f}")
+        st.caption("Copy this number directly into your transaction window.")
+        
+    with col_btn2:
+        st.write("") # Espaciador
+        st.write("") 
+        # Enlace directo corregido y alineado
+        tradeshift_url = "https://platform.tradeshift.com/"
+        st.markdown(f'<a href="{tradeshift_url}" target="_blank"><button style="background-color:#FF4B4B; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-size:16px;">🌐 Open Tradeshift Portal</button></a>', unsafe_allow_html=True)
 # Valores de prueba simulando la extracción de la IA si se sube un archivo
 if operator_file and client_file:
     st.success("✅ Both contracts uploaded successfully! Running AI Restrictiveness Check...")
