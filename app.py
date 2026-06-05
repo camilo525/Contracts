@@ -7,10 +7,6 @@ st.set_page_config(page_title="Thrust Aviation - CC Calculator", layout="wide")
 # URL del Logo (Marcador de posición)
 LOGO_URL = "https://thrust-aviation.com/wp-content/uploads/2024/02/Logo-White-500-2-e1710003051285.png"
 
-# URL del Logo Principal (Marcador de posición)
-LOGO_URL = "https://static.wixstatic.com/media/5f5db0_d7471efb590b4734a38048043fb3b2c1~mv2.png/v1/fill/w_300,h_300,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/FBO%20Audit%20Logo%20Silver.png"
-# URL del Logo de Argus para el final
-ARGUS_LOGO_URL = "https://static.wixstatic.com/media/5f5db0_d7471efb590b4734a38048043fb3b2c1~mv2.png/v1/fill/w_300,h_300,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/FBO%20Audit%20Logo%20Silver.png"
 
 # --- ENCABEZADO ---
 st.image(LOGO_URL, width=400)
