@@ -67,14 +67,4 @@ if op_file and cl_file:
 
     st.warning("**🟡 WARNING: Peak Travel Dates Detected**\n\n- The flight dates coincide with **Thrust Peak Dates** (Section 26).\n- **Requirement:** Ensure client contract is marked as **100% Non-Refundable** and departure time change is capped at **+/- 2 hours**.")
 
-    st.success("**🟢 ALIGNED: Late Passenger Policy**\n\n- Both contracts enforce the 30-minute 'No Show' rule. No risk detected.")
-
-    st.divider()
-
-    # --- EJECUCIÓN Y PORTAL DE TRADESHIFT ---
-    st.subheader("🚀 Next Steps")
-    col_btn1, col_btn2 = st.columns(2)
-
-    with col_btn1:
-        st.write("Confirm amount to process in Tradeshift:")
-        st.text_input("Hold Figure to Copy:", value=f"{total_hold
+    st.success("**🟢 ALIGNED: Late Passenger Policy**\n\n
