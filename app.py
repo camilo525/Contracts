@@ -63,7 +63,6 @@ if op_file and cl_file:
     # --- AUDITORÍA DE CLÁUSULAS ---
     st.subheader("🛡️ Compliance Risk Assessment")
     
-    # Líneas unificadas sin saltos físicos de Enter para evitar el SyntaxZError
     st.error("**🔴 CRITICAL: Cancellation Window Exposure**\n\n- **Operator Requirement:** 100% penalty within 4 days.\n- **Your Master Terms:** 100% penalty within 3 days (72h).\n- **Risk:** You are unprotected for 24 hours. The client could cancel without penalty while you still owe the operator.")
 
     st.warning("**🟡 WARNING: Peak Travel Dates Detected**\n\n- The flight dates coincide with **Thrust Peak Dates** (Section 26).\n- **Requirement:** Ensure client contract is marked as **100% Non-Refundable** and departure time change is capped at **+/- 2 hours**.")
@@ -84,5 +83,5 @@ if op_file and cl_file:
     with col_btn2:
         st.write("Launch Portal:")
         tradeshift_url = "https://platform.tradeshift.com/"
-        st.markdown(
-            f'<a href="{tradeshift_
+        
+        # BLOQUE RECONSTRUIDO: Asegura el cierre de llaves y comillas HTML perfectamente
