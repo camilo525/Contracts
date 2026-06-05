@@ -80,7 +80,7 @@ if operator_file and client_file:
         st.write("") 
         # Enlace directo que simula el botón abriendo Tradeshift en una nueva pestaña
         tradeshift_url = "https://platform.tradeshift.com/"
-        st.markdown(f'<a href="{tradeshift_url}" target="_blank"><button style="background-color:#FF4B4B; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-size:16px;">🌐 Open Tradeshift Portal</button></a>', unsafe_allow_value=True, unsafe_allow_html=True)
+       st.markdown(f'<a href="{tradeshift_url}" target="_blank"><button style="background-color:#FF4B4B; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-size:16px;">🌐 Open Tradeshift Portal</button></a>', unsafe_allow_html=True)
 
 else:
     st.info("💡 Please upload both the Operator and Client PDF files above to simulate the compliance analysis.")
