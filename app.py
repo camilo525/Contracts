@@ -4,10 +4,8 @@ import re
 # --- CONFIGURACIÓN DE LA PÁGINA ---
 st.set_page_config(page_title="Thrust Aviation - CC Calculator", layout="wide")
 
-# URL del Logo Principal (Marcador de posición)
+# URL del Logo (Marcador de posición)
 LOGO_URL = "https://placehold.co/600x150/1a1a1a/ffffff?text=THRUST+AVIATION+LOGO"
-# URL del Logo de Argus para el final
-ARGUS_LOGO_URL = "https://placehold.co/200x80/1a1a1a/ffffff?text=ARGUS+AUDITED"
 
 # --- ENCABEZADO ---
 st.image(LOGO_URL, width=400)
@@ -60,7 +58,7 @@ if op_file and cl_file:
 
     st.markdown("---")
 
-    # --- AUDITORÍA DE CLÁUSULAS ---
+    # --- AUDITORÍA DE CLÁUSULAS (Flags de Seguridad en línea única protegida) ---
     st.subheader("🛡️ Compliance Risk Assessment")
     
     st.error("**🔴 CRITICAL: Cancellation Window Exposure**\n\n- **Operator Requirement:** 100% penalty within 4 days.\n- **Your Master Terms:** 100% penalty within 3 days (72h).\n- **Risk:** You are unprotected for 24 hours. The client could cancel without penalty while you still owe the operator.")
@@ -83,5 +81,18 @@ if op_file and cl_file:
     with col_btn2:
         st.write("Launch Portal:")
         tradeshift_url = "https://platform.tradeshift.com/"
-        
-        # BLOQUE RECONSTRUIDO: Asegura el cierre de llaves y comillas HTML perfectamente
+        st.markdown(
+            f'<a href="{tradeshift_url}" target="_blank">'
+            f'<button style="background-color:#FF4B4B; color:white; border:none; padding:12px 24px; '
+            f'border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px;">'
+            f'🌐 Open Tradeshift Portal</button></a>', 
+            unsafe_allow_html=True
+        )
+
+else:
+    st.warning("Please upload both PDF contracts to start the compliance audit.")
+
+# --- PIE DE PÁGINA ---
+st.sidebar.markdown("---")
+st.sidebar.caption("Thrust Aviation Internal Tool v1.7")
+st.sidebar.info("The logic is strictly bounded by Section 5, 9, 12, and 26 of the Master Agreement.")
