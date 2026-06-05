@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(page_title="Thrust Aviation - Smart Auditor", layout="wide")
 
 # URL del Logo (Reemplaza esta URL por la ruta de tu logo real cuando lo tengas)
-LOGO_URL = "https://placehold.co/600x150/1a1a1a/ffffff?text=THRUST+AVIATION+LOGO"
+LOGO_URL = "https://thrust-aviation.com/wp-content/uploads/2024/02/Logo-White-500-2-e1710003051285.png"
 
 # --- ENCABEZADO ---
 st.image(LOGO_URL, width=400)
