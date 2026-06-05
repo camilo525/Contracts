@@ -10,7 +10,7 @@ LOGO_URL = "https://thrust-aviation.com/wp-content/uploads/2024/02/Logo-White-50
 ARGUS_LOGO_URL = "https://static.wixstatic.com/media/5f5db0_d7471efb590b4734a38048043fb3b2c1~mv2.png/v1/fill/w_480,h_480,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/FBO%20Audit%20Logo%20Silver.png"
 
 # --- ENCABEZADO ---
-st.image(LOGO_URL, width=400)
+st.image(LOGO_URL, width=200)
 st.title("Contract Compliance & OpenAI Financial Auditor")
 st.markdown("Real-time variable risk assessment and **4% Credit Card Hold Calculator** powered by OpenAI.")
 
