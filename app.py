@@ -1,15 +1,17 @@
 import streamlit as st
+import pypdf
+import re
 
 # --- CONFIGURACIÓN DE LA PÁGINA ---
-st.set_page_config(page_title="Thrust Aviation - Smart Auditor", layout="wide")
+st.set_page_config(page_title="Thrust Aviation - Open Engine", layout="wide")
 
-# URL del Logo (Reemplaza esta URL por la ruta de tu logo real cuando lo tengas)
-LOGO_URL = "https://thrust-aviation.com/wp-content/uploads/2024/02/Logo-White-500-2-e1710003051285.png"
+# URL del Logo de la empresa
+LOGO_URL = "https://placehold.co/600x150/1a1a1a/ffffff?text=THRUST+AVIATION+LOGO"
 
 # --- ENCABEZADO ---
 st.image(LOGO_URL, width=400)
-st.title("Contract Compliance & Financial Auditor")
-st.markdown("Automated risk assessment based on **Thrust Aviation Holdings LLC** master terms.")
+st.title("Dynamic Operator Contract Auditor")
+st.markdown("Automated AI engine that extracts variable operator costs and applies the 4% credit card hold formula dynamically.")
 
 st.divider()
 
@@ -17,54 +19,101 @@ st.divider()
 col_up1, col_up2 = st.columns(2)
 
 with col_up1:
-    st.info("📂 **Operator Side**")
+    st.info("📂 **STEP 1: Upload Operator Document**")
     op_file = st.file_uploader("Upload Operator Contract (PDF)", type=["pdf"], key="op")
 
 with col_up2:
-    st.info("📂 **Client Side**")
+    st.info("📂 **STEP 2: Upload Client Document**")
     cl_file = st.file_uploader("Upload Client Contract (PDF)", type=["pdf"], key="cl")
 
 st.divider()
 
-# --- LÓGICA PRINCIPAL (Solo se activa si hay archivos) ---
+# --- EXTRACTOR ABIERTO DE VALORES (MÓDULO IA/REGEX) ---
+def extract_any_operator_cost(pdf_file):
+    """
+    Esta función actúa como el ojo de la IA: lee CUALQUIER PDF línea por línea,
+    limpia el texto y busca patrones financieros variables para extraer el costo real del operador.
+    """
+    try:
+        reader = pypdf.PdfReader(pdf_file)
+        full_text = ""
+        for page in reader.pages:
+            text = page.extract_text()
+            if text:
+                full_text += text
+        
+        # Lista de patrones inteligentes para capturar valores variables (ej: $14,900.00, 25000, 5,400.50)
+        patterns = [
+            r'(?:Wire Total|Total Price|Net Cost|Total Amount|Amount Due)[:\s]*\$?([\d,]+(?:\.\d{2})?)',
+            r'(?:Trip Price.*?)\s+\$?([\d,]+(?:\.\d{2})?)',
+            r'(?:Total Taxes and Fees.*?)\s+\$?([\d,]+(?:\.\d{2})?)'
+        ]
+        
+        for pattern in patterns:
+            match = re.search(pattern, full_text, re.IGNORECASE)
+            if match:
+                # Extrae la cadena de texto numérica encontrada, elimina las comas de formato y la convierte a número real
+                clean_value = match.group(1).replace(',', '')
+                return float(clean_value)
+                
+        # Si las etiquetas estándar fallan, busca el último número grande con formato de dinero en el documento
+        all_amounts = re.findall(r'\$?([\d,]+\.\d{2})', full_text)
+        if all_amounts:
+            # Tomamos el último que suele ser el total del contrato
+            return float(all_amounts[-1].replace(',', ''))
+            
+        return None
+    except Exception as e:
+        return None
+
+# --- EVALUACIÓN EN TIEMPO REAL ---
 if op_file and cl_file:
-    st.success("✅ Files received. Analyzing clauses and financial holds...")
+    st.success("🤖 AI Engine is parsing documents...")
     
-    # 1. CÁLCULOS FINANCIEROS (Basado en tu fórmula de 5%)
-    # Simulamos que la IA extrajo 14,900.00 del contrato del operador
-    base_value =  
-    hold_percentage = 0.05
-    security_fee = base_value * hold_percentage
-    total_hold = base_value + security_fee
-
-    st.subheader("💳 Financial Hold Summary")
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Operator Base Value", f"${base_value:,.2f}")
-    c2.metric("OPR Hold Fee (5%)", f"${security_fee:,.2f}")
-    c3.metric("TOTAL CREDIT CARD HOLD", f"${total_hold:,.2f}", delta="Target for Tradeshift")
-
-    st.markdown("---")
-
-    # 2. AUDITORÍA DE CLÁUSULAS (Flags de Seguridad)
-    st.subheader("🛡️ Compliance Risk Assessment")
+    # Aquí la IA extrae el valor de forma completamente ABIERTA
+    dynamic_operator_cost = extract_any_operator_cost(op_file)
     
-    # Flag Crítica (Simulada para el ejemplo)
-    st.error("""
-    **🔴 CRITICAL: Cancellation Window Exposure**
-    - **Operator Requirement:** 100% penalty within 4 days.
-    - **Your Master Terms:** 100% penalty within 3 days (72h).
-    - **Risk:** You are unprotected for 24 hours. The client could cancel without penalty while you still owe the operator.
-    """)
+    if dynamic_operator_cost is not None and dynamic_operator_cost > 0:
+        st.info(f"🎯 **AI Extraction Success!** Extracted Operator Value: `${dynamic_operator_cost:,.2f} USD`")
+        
+        # --- LA FÓRMULA MATEMÁTICA EN ACCIÓN (4%) ---
+        cc_rate = 0.04
+        calculated_fee = dynamic_operator_cost * cc_rate
+        total_cc_hold = dynamic_operator_cost + calculated_fee
 
-    # Flag de Peak Travel
-    st.warning("""
-    **🟡 WARNING: Peak Travel Dates Detected**
-    - The flight dates coincide with **Thrust Peak Dates** (Section 26).
-    - **Requirement:** Ensure client contract is marked as **100% Non-Refundable** and departure time change is capped at **+/- 2 hours**.
-    """)
+        # Dashboard Financiero Dinámico
+        st.subheader("💳 Dynamic Credit Card Hold Calculation")
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Extracted Operator Cost ($V$)", f"${dynamic_operator_cost:,.2f} USD")
+        c2.metric("Calculated 4% Fee", f"${calculated_fee:,.2f} USD")
+        c3.metric("TOTAL CC HOLD TARGET", f"${total_cc_hold:,.2f} USD", delta="Ready for Tradeshift")
+        
+        st.divider()
+        
+        # --- SECCIÓN DE ACCIONES ---
+        st.subheader("🚀 Execution Panel")
+        col_btn1, col_btn2 = st.columns(2)
 
-    # Flag de Éxito
-    st.success("""
-    **🟢 ALIGNED: Late Passenger Policy**
-    - Both contracts enforce the 30-minute 'No Show' rule. No risk detected.
-    """)
+        with col_btn1:
+            st.write("Copy this open calculated amount:")
+            st.text_input("Amount for Authorization:", value=f"{total_cc_hold:.2f}")
+            st.caption("This number updates automatically depending on the uploaded PDF.")
+
+        with col_btn2:
+            st.write("Launch Portal:")
+            tradeshift_url = "https://platform.tradeshift.com/"
+            st.markdown(
+                f'<a href="{tradeshift_url}" target="_blank">'
+                f'<button style="background-color:#FF4B4B; color:white; border:none; padding:12px 24px; '
+                f'border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px;">'
+                f'🌐 Open Tradeshift Portal</button></a>', 
+                unsafe_allow_html=True
+            )
+            
+        # --- AUDITORÍA DE CLÁUSULAS (Flags de Riesgo Estáticos/Ejemplo) ---
+        st.subheader("🛡️ Compliance Risk Assessment")
+        st.error("**🔴 CRITICAL: Cancellation Window Exposure** - Operator requires 100% penalty within 4 days, but your Master Terms enforce it within 72h. You are unprotected for 24 hours.")
+        st.warning("**🟡 WARNING: Peak Travel Dates Detected** - Flight falls on Thrust Peak Dates. Ensure the client contract is marked as 100% Non-Refundable.")
+
+    else:
+        st
