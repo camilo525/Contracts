@@ -30,10 +30,10 @@ st.divider()
 if op_file and cl_file:
     st.success("✅ Files received. Analyzing clauses and financial holds...")
     
-    # 1. CÁLCULOS FINANCIEROS (Basado en tu fórmula de 5%)
+    # 1. CÁLCULOS FINANCIEROS (Basado en tu fórmula de 4%)
     # Simulamos que la IA extrajo 14,900.00 del contrato del operador
-    base_value = 14900.00 
-    hold_percentage = 0.05
+    base_value =  
+    hold_percentage = 0.04
     security_fee = base_value * hold_percentage
     total_hold = base_value + security_fee
 
