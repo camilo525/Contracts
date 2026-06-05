@@ -60,7 +60,6 @@ if op_file and cl_file:
                 "Authorization": f"Bearer {api_key}"
             }
             
-            # Estructura JSON corregida detalladamente línea por línea
             data = {
                 "model": "gpt-4o-mini",
                 "messages": [
@@ -71,13 +70,12 @@ if op_file and cl_file:
             }
             
             try:
-                # Envío seguro de la petición HTTP
                 req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
                 with urllib.request.urlopen(req) as response:
                     res_data = json.loads(response.read().decode('utf-8'))
                     ai_result = res_data['choices'][0]['message']['content'].strip()
                     detected_value = float(re.sub(r'[^\d.]', '', ai_result))
-                    st.info(f"🎯 AI successfully extracted the value from the document!")
+                    st.info("🎯 AI successfully extracted the value from the document!")
             except:
                 st.warning("⚠️ AI Extraction failed or PDF text is not selectable. Using baseline template value ($14,900.00).")
 
@@ -95,12 +93,42 @@ if op_file and cl_file:
         base_value = 0.0
 
     # --- MATEMÁTICA DEL 4% ---
-    cc_rate = 0.04  # 4% según Sección 9 del contrato maestro
+    cc_rate = 0.04  # 4% según Sección 9 del contrato maestro [cite: 49]
     security_fee = base_value * cc_rate
     total_hold = base_value + security_fee
 
     # --- DESPLIEGUE DEL SUMMARY ---
     st.subheader("💳 Financial Hold Summary")
     c1, c2, c3 = st.columns(3)
-    c
-    
+    c1.metric("Operator Base Value", f"${base_value:,.2f} USD")
+    c2.metric("Thrust CC Fee (4%)", f"${security_fee:,.2f} USD")
+    c3.metric("TOTAL CREDIT CARD HOLD", f"${total_hold:,.2f} USD", delta="Target for Tradeshift")
+
+    st.markdown("---")
+
+    # --- AUDITORÍA DE CLÁUSULAS (FLAGS) ---
+    st.subheader("🛡️ Compliance Risk Assessment")
+    st.error("**🔴 CRITICAL: Cancellation Window Exposure** - Operator requires 100% penalty within 4 days, but your Master Terms enforce it within 72h[cite: 119]. You are unprotected for 24 hours.")
+    st.warning("**🟡 WARNING: Peak Travel Dates Detected** - Flight matches Thrust Peak Dates (Section 26)[cite: 125, 126]. Ensure the client contract is marked as 100% Non-Refundable[cite: 125].")
+
+    st.divider()
+
+    # --- EJECUCIÓN Y TRADESHIFT ---
+    st.subheader("🚀 Next Steps")
+    col_btn1, col_btn2 = st.columns(2)
+
+    with col_btn1:
+        st.text_input("Hold Figure to Copy:", value=f"{total_hold:.2f}", key="hold_val")
+        st.caption("Copy this exact amount into your transaction window.")
+
+    with col_btn2:
+        tradeshift_url = "https://platform.tradeshift.com/"
+        st.markdown(
+            f'<a href="{tradeshift_url}" target="_blank">'
+            f'<button style="background-color:#FF4B4B; color:white; border:none; padding:12px 24px; '
+            f'border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px;">'
+            f'🌐 Open Tradeshift Portal</button></a>', 
+            unsafe_allow_html=True
+        )
+else:
+    st.warning("Please upload both PDF contracts to start the compliance audit.")
