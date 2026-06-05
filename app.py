@@ -1,22 +1,10 @@
 import streamlit as st
-import subprocess
-import sys
-
-# --- AUTOCORRECCIÓN DE LIBRERÍAS ---
-try:
-    import pypdf
-except ModuleNotFoundError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "pypdf"])
-    import pypdf
-
-try:
-    import openai
-except ModuleNotFoundError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "openai"])
-    import openai
-
+import pypdf
 import re
 from openai import OpenAI
+
+# --- CONFIGURACIÓN DE LA PÁGINA ---
+st.set_page_config(page_title="Thrust Aviation - AI Live Auditor", layout="wide")
 
 # --- CONFIGURACIÓN DE LA PÁGINA ---
 st.set_page_config(page_title="Thrust Aviation - AI Live Auditor", layout="wide")
