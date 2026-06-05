@@ -20,10 +20,9 @@ col_input, col_calc = st.columns([1, 1])
 
 with col_input:
     st.markdown("### 📥 1. Financial Input")
-    # Entrada manual del valor del contrato del operador (abierto y variable)
     operator_cost_input = st.text_input("Enter Operator Contract Net Cost ($USD):", value="14900.00")
     
-    # Limpieza básica del número ingresado por el usuario
+    # Limpieza básica del número ingresado
     clean_string = re.sub(r'[^\d.]', '', operator_cost_input)
     try:
         operator_net_cost = float(clean_string) if clean_string else 0.0
@@ -32,7 +31,6 @@ with col_input:
 
 with col_calc:
     st.markdown("### 💳 2. Credit Card Hold Formula (4%)")
-    # Aplicación de la fórmula exacta basada en la Sección 9 y 160 del contrato maestro
     cc_rate = 0.04
     calculated_fee = operator_net_cost * cc_rate
     total_cc_hold = operator_net_cost + calculated_fee
@@ -46,7 +44,7 @@ st.markdown("### 🚀 3. Execution & Portals")
 col_btn1, col_btn2 = st.columns(2)
 
 with col_btn1:
-    st.write("Copy calculated figure for your processor:")
+    st.write("Copy calculated figure for your records:")
     st.text_input("Amount to process:", value=f"{total_cc_hold:.2f}", key="hold_val")
     st.caption("Copy this clean number directly into Tradeshift.")
 
@@ -63,12 +61,12 @@ with col_btn2:
 
 st.divider()
 
-# --- GENERADOR DE PROMPTS DE COMPLIANCE (IA EXTERNA) ---
+# --- GENERADOR DE PROMPTS DE COMPLIANCE ---
 st.markdown("### 🛡️ 4. AI Compliance Auditor Prompt Generator")
-st.write("Since cloud library limits are active, copy this customized system prompt and paste it into ChatGPT, Gemini, or Claude along with the text from your contracts to get a full risk analysis instantly.")
+st.write("Copy this customized system prompt and paste it into ChatGPT, Gemini, or Claude along with the text from your contracts to get a full risk analysis instantly.")
 
-# Render del Prompt Dinámico en inglés que incluye las reglas de tu contrato maestro
-prompt_text = f"""You are the Core Risk & Legal Compliance Auditor for Thrust Aviation. 
+# Quitamos la 'f' del string para evitar conflictos de llaves y usamos .format() al final
+prompt_template = """You are the Core Risk & Legal Compliance Auditor for Thrust Aviation. 
 Analyze the upcoming "Operator Contract" and compare it against our strict "Master Client Contract Terms" to protect us from financial liability.
 
 OUR GOLDEN RULE:
@@ -80,4 +78,4 @@ CRITICAL CLAUSES TO VERIFY:
    - Domestic Round-Trips: > 5 days out = 30% fee | 5 days to 72 hours out = 50% fee | Within 72 hours = 100% fee.
    - International Flights: 100% non-refundable immediately.
 2. Peak Travel Dates (Section 26): Any flight segment touching peak travel windows forces 100% non-refundable terms instantly and restricts schedule changes to max +/- 2 hours (Section 12).
-3. Late Passenger Policy (Section 5): Passengers > 30 minutes late without prior notice are a "No Show" subject to a 100% cancellation penalty
+3. Late Passenger Policy (Section 5): Passengers > 30 minutes late without prior
