@@ -7,6 +7,11 @@ st.set_page_config(page_title="Thrust Aviation - CC Calculator", layout="wide")
 # URL del Logo (Marcador de posición)
 LOGO_URL = "https://placehold.co/600x150/1a1a1a/ffffff?text=THRUST+AVIATION+LOGO"
 
+# URL del Logo Principal (Marcador de posición)
+LOGO_URL = "https://placehold.co/600x150/1a1a1a/ffffff?text=THRUST+AVIATION+LOGO"
+# URL del Logo de Argus para el final
+ARGUS_LOGO_URL = "https://placehold.co/200x80/1a1a1a/ffffff?text=ARGUS+AUDITED"
+
 # --- ENCABEZADO ---
 st.image(LOGO_URL, width=400)
 st.title("Contract Compliance & Financial Auditor")
