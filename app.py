@@ -12,7 +12,7 @@ ARGUS_LOGO_URL = "https://static.wixstatic.com/media/5f5db0_d7471efb590b4734a380
 # --- ENCABEZADO ---
 st.image(LOGO_URL, width=200)
 st.title("Contract Compliance & OpenAI Financial Auditor")
-st.markdown("Real-time variable risk assessment and **4% Credit Card Hold Calculator** powered by OpenAI.")
+st.markdown("Real-time variable risk assessment")
 
 st.divider()
 
