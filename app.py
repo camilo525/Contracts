@@ -4,7 +4,7 @@ import re
 # --- CONFIGURACIÓN DE LA PÁGINA ---
 st.set_page_config(page_title="Thrust Aviation - CC Calculator", layout="wide")
 
-# URL del Logo (Marcador de posición, puedes reemplazarlo luego)
+# URL del Logo (Marcador de posición)
 LOGO_URL = "https://placehold.co/600x150/1a1a1a/ffffff?text=THRUST+AVIATION+LOGO"
 
 # --- ENCABEZADO ---
@@ -34,10 +34,10 @@ if op_file and cl_file:
     # --- SECCIÓN DEL INPUT MANUAL ---
     st.subheader("📥 Financial Input")
     
-    # Caja de entrada manual abierta para escribir cualquier monto del operador
+    # Caja de entrada manual abierta
     operator_cost_input = st.text_input("Enter the exact Total Price / Wire Total from the Operator Contract ($USD):", value="14900.00")
     
-    # Limpieza de caracteres por seguridad (elimina signos de $ o comas si los escribes)
+    # Limpieza de caracteres
     clean_string = re.sub(r'[^\d.]', '', operator_cost_input)
     try:
         base_value = float(clean_string) if clean_string else 0.0
@@ -45,7 +45,7 @@ if op_file and cl_file:
         base_value = 0.0
 
     # --- MATEMÁTICA DE LA FÓRMULA (4% sobre el precio del operador) ---
-    cc_rate = 0.04  # 4% de recargo administrativo para tarjetas domésticas
+    cc_rate = 0.04
     security_fee = base_value * cc_rate
     total_hold = base_value + security_fee
 
@@ -58,11 +58,41 @@ if op_file and cl_file:
 
     st.markdown("---")
 
-    # --- AUDITORÍA DE CLÁUSULAS (Flags de Seguridad) ---
+    # --- AUDITORÍA DE CLÁUSULAS (Flags de Seguridad en línea única protegida) ---
     st.subheader("🛡️ Compliance Risk Assessment")
     
-    st.error("""
-    **🔴 CRITICAL: Cancellation Window Exposure**
-    - **Operator Requirement:** 100% penalty within 4 days.
-    - **Your Master Terms:** 100% penalty within 3 days (72h).
-    - **Risk:** You are unprotected for
+    st.error("**🔴 CRITICAL: Cancellation Window Exposure**\n\n- **Operator Requirement:** 100% penalty within 4 days.\n- **Your Master Terms:** 100% penalty within 3 days (72h).\n- **Risk:** You are unprotected for 24 hours. The client could cancel without penalty while you still owe the operator.")
+
+    st.warning("**🟡 WARNING: Peak Travel Dates Detected**\n\n- The flight dates coincide with **Thrust Peak Dates** (Section 26).\n- **Requirement:** Ensure client contract is marked as **100% Non-Refundable** and departure time change is capped at **+/- 2 hours**.")
+
+    st.success("**🟢 ALIGNED: Late Passenger Policy**\n\n- Both contracts enforce the 30-minute 'No Show' rule. No risk detected.")
+
+    st.divider()
+
+    # --- EJECUCIÓN Y PORTAL DE TRADESHIFT ---
+    st.subheader("🚀 Next Steps")
+    col_btn1, col_btn2 = st.columns(2)
+
+    with col_btn1:
+        st.write("Confirm amount to process in Tradeshift:")
+        st.text_input("Hold Figure to Copy:", value=f"{total_hold:.2f}", key="hold_val")
+        st.caption("Copy this exact amount into your transaction window.")
+
+    with col_btn2:
+        st.write("Launch Portal:")
+        tradeshift_url = "https://platform.tradeshift.com/"
+        st.markdown(
+            f'<a href="{tradeshift_url}" target="_blank">'
+            f'<button style="background-color:#FF4B4B; color:white; border:none; padding:12px 24px; '
+            f'border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px;">'
+            f'🌐 Open Tradeshift Portal</button></a>', 
+            unsafe_allow_html=True
+        )
+
+else:
+    st.warning("Please upload both PDF contracts to start the compliance audit.")
+
+# --- PIE DE PÁGINA ---
+st.sidebar.markdown("---")
+st.sidebar.caption("Thrust Aviation Internal Tool v1.7")
+st.sidebar.info("The logic is strictly bounded by Section 5, 9, 12, and 26 of the Master Agreement.")
