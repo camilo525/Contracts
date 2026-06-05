@@ -18,7 +18,7 @@ st.divider()
 
 # --- ACTIVADOR DE OPENAI (SIDEBAR) ---
 st.sidebar.markdown("## 🤖 OpenAI Activation")
-api_key = st.sidebar.text_input("Enter OpenAI API Key (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):", type="password")
+api_key = st.sidebar.text_input("Enter OpenAI API Key (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):", type="password")
 if not api_key:
     st.sidebar.warning("⚠️ Running in Simulation Mode. Enter your OpenAI API Key to enable the Live Auditor.")
 else:
