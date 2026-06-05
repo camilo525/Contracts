@@ -31,17 +31,15 @@ with col_up2:
 
 st.divider()
 
-# --- FUNCIÓN LIGERA PARA EXTRAER TEXTO SIN LIBRERÍAS PESADAS ---
+# --- FUNCIÓN LIGERA PARA EXTRAER TEXTO ---
 def fast_pdf_to_text(uploaded_file):
     if uploaded_file is None:
         return ""
     try:
-        # Lee los bytes del PDF de forma directa y limpia caracteres básicos legibles
         binary_data = uploaded_file.read()
         text = binary_data.decode('utf-8', errors='ignore')
-        # Filtra solo caracteres alfanuméricos legibles para enviarle a la IA
         clean_text = "".join([c for c in text if c.isalnum() or c in " \n.,:$-\n"])
-        return clean_text[:4000]  # Limitamos el tamaño para la API
+        return clean_text[:4000]
     except:
         return ""
 
@@ -49,19 +47,20 @@ def fast_pdf_to_text(uploaded_file):
 if op_file and cl_file:
     st.success("✅ Files received.")
     
-    # Intentar extraer el valor por defecto o mediante IA
-    detected_value = 14900.00  # Valor base de respaldo (Don Mcgrath Example)
+    # Valor base de respaldo (Don Mcgrath Example)
+    detected_value = 14900.00 
     
     if api_key:
         with st.spinner("🤖 AI is reading the Operator PDF to extract the contract value..."):
             raw_text = fast_pdf_to_text(op_file)
             
-            # Conexión directa HTTP a OpenAI sin usar "import openai"
             url = "https://api.openai.com/v1/chat/completions"
             headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {api_key}"
-            )
+            }
+            
+            # Estructura JSON corregida detalladamente línea por línea
             data = {
                 "model": "gpt-4o-mini",
                 "messages": [
@@ -72,24 +71,23 @@ if op_file and cl_file:
             }
             
             try:
+                # Envío seguro de la petición HTTP
                 req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
                 with urllib.request.urlopen(req) as response:
                     res_data = json.loads(response.read().decode('utf-8'))
                     ai_result = res_data['choices'][0]['message']['content'].strip()
-                    # Convertir el resultado de la IA a número flotante
                     detected_value = float(re.sub(r'[^\d.]', '', ai_result))
                     st.info(f"🎯 AI successfully extracted the value from the document!")
             except:
                 st.warning("⚠️ AI Extraction failed or PDF text is not selectable. Using baseline template value ($14,900.00).")
 
-    # --- INPUT MANUAL (Rellenado automáticamente por la IA, pero modificable por ti) ---
+    # --- INPUT MANUAL (Rellenado automáticamente o modificable por ti) ---
     st.subheader("📥 Financial Verification")
     operator_cost_input = st.text_input(
         "Verify or update the Operator Contract Net Cost ($USD):", 
         value=f"{detected_value:.2f}"
     )
     
-    # Limpieza del input manual por seguridad
     clean_string = re.sub(r'[^\d.]', '', operator_cost_input)
     try:
         base_value = float(clean_string) if clean_string else 0.0
@@ -97,42 +95,12 @@ if op_file and cl_file:
         base_value = 0.0
 
     # --- MATEMÁTICA DEL 4% ---
-    cc_rate = 0.04  # 4% según Sección 9 del contrato maestro 
+    cc_rate = 0.04  # 4% según Sección 9 del contrato maestro
     security_fee = base_value * cc_rate
     total_hold = base_value + security_fee
 
     # --- DESPLIEGUE DEL SUMMARY ---
     st.subheader("💳 Financial Hold Summary")
     c1, c2, c3 = st.columns(3)
-    c1.metric("Operator Base Value", f"${base_value:,.2f} USD")
-    c2.metric("Thrust CC Fee (4%)", f"${security_fee:,.2f} USD")
-    c3.metric("TOTAL CREDIT CARD HOLD", f"${total_hold:,.2f} USD", delta="Target for Tradeshift")
-
-    st.markdown("---")
-
-    # --- AUDITORÍA DE CLÁUSULAS (FLAGS) ---
-    st.subheader("🛡️ Compliance Risk Assessment")
-    st.error("**🔴 CRITICAL: Cancellation Window Exposure** - Operator requires 100% penalty within 4 days, but your Master Terms enforce it within 72h[cite: 119]. You are unprotected for 24 hours.")
-    st.warning("**🟡 WARNING: Peak Travel Dates Detected** - Flight matches Thrust Peak Dates (Section 26)[cite: 125]. Ensure the client contract is marked as 100% Non-Refundable[cite: 125].")
-
-    st.divider()
-
-    # --- EJECUCIÓN Y TRADESHIFT ---
-    st.subheader("🚀 Next Steps")
-    col_btn1, col_btn2 = st.columns(2)
-
-    with col_btn1:
-        st.text_input("Hold Figure to Copy:", value=f"{total_hold:.2f}", key="hold_val")
-        st.caption("Copy this exact amount into your transaction window.")
-
-    with col_btn2:
-        tradeshift_url = "https://platform.tradeshift.com/"
-        st.markdown(
-            f'<a href="{tradeshift_url}" target="_blank">'
-            f'<button style="background-color:#FF4B4B; color:white; border:none; padding:12px 24px; '
-            f'border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px;">'
-            f'🌐 Open Tradeshift Portal</button></a>', 
-            unsafe_allow_html=True
-        )
-else:
-    st.warning("Please upload both PDF contracts to start the compliance audit.")
+    c
+    
