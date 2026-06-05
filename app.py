@@ -6,8 +6,8 @@ import re
 # --- CONFIGURACIÓN DE LA PÁGINA ---
 st.set_page_config(page_title="Thrust Aviation - OpenAI Auditor", layout="wide")
 
-LOGO_URL = "https://placehold.co/600x150/1a1a1a/ffffff?text=THRUST+AVIATION+LOGO"
-ARGUS_LOGO_URL = "https://placehold.co/200x80/1a1a1a/ffffff?text=ARGUS+AUDITED"
+LOGO_URL = "https://thrust-aviation.com/wp-content/uploads/2024/02/Logo-White-500-2-e1710003051285.png"
+ARGUS_LOGO_URL = "https://static.wixstatic.com/media/5f5db0_d7471efb590b4734a38048043fb3b2c1~mv2.png/v1/fill/w_480,h_480,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/FBO%20Audit%20Logo%20Silver.png"
 
 # --- ENCABEZADO ---
 st.image(LOGO_URL, width=400)
@@ -18,7 +18,7 @@ st.divider()
 
 # --- ACTIVADOR DE OPENAI (SIDEBAR) ---
 st.sidebar.markdown("## 🤖 OpenAI Activation")
-api_key = st.sidebar.text_input("Enter OpenAI API Key (sk-...):", type="password")
+api_key = st.sidebar.text_input("Enter OpenAI API Key (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):", type="password")
 if not api_key:
     st.sidebar.warning("⚠️ Running in Simulation Mode. Enter your OpenAI API Key to enable the Live Auditor.")
 else:
