@@ -97,5 +97,4 @@ else:
 st.sidebar.markdown("---")
 st.sidebar.caption("Thrust Aviation Internal Tool v1.7")
 st.sidebar.info("The logic is strictly bounded by Section 5, 9, 12, and 26 of the Master Agreement.")
-# URL del Logo (Marcador de posición)
-LOGO_URL = "https://thrust-aviation.com/wp-content/uploads/2024/02/Logo-White-500-2-e1710003051285.png"
+
