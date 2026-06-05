@@ -9,7 +9,7 @@ LOGO_URL = "https://thrust-aviation.com/wp-content/uploads/2024/02/Logo-White-50
 
 
 # --- ENCABEZADO ---
-st.image(LOGO_URL, width=400)
+st.image(LOGO_URL, width=200)
 st.title("Contract Compliance & Financial Auditor")
 st.markdown("Automated risk assessment and **4% Credit Card Hold Calculator** based on Thrust Aviation terms.")
 
