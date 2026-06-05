@@ -32,7 +32,7 @@ if op_file and cl_file:
     
     # 1. CÁLCULOS FINANCIEROS (Basado en tu fórmula de 5%)
     # Simulamos que la IA extrajo 14,900.00 del contrato del operador
-    base_value = 14900.00 
+    base_value =  
     hold_percentage = 0.05
     security_fee = base_value * hold_percentage
     total_hold = base_value + security_fee
