@@ -78,4 +78,22 @@ CRITICAL CLAUSES TO VERIFY:
    - Domestic Round-Trips: > 5 days out = 30% fee | 5 days to 72 hours out = 50% fee | Within 72 hours = 100% fee.
    - International Flights: 100% non-refundable immediately.
 2. Peak Travel Dates (Section 26): Any flight segment touching peak travel windows forces 100% non-refundable terms instantly and restricts schedule changes to max +/- 2 hours (Section 12).
-3. Late Passenger Policy (Section 5): Passengers > 30 minutes late without prior
+3. Late Passenger Policy (Section 5): Passengers > 30 minutes late without prior notice are a "No Show" subject to a 100% cancellation penalty.
+
+The current target calculation for this specific contract has been set at a base operator cost of: {cost_value} USD.
+
+Please analyze the texts below and flag any 'CRITICAL DEFICIT' (if the client contract is less restrictive than the operator's), 'WARNING', or 'ALIGNED' status.
+
+--- PASTE OPERATOR CONTRACT TEXT HERE ---
+
+--- PASTE CLIENT CONTRACT TEXT HERE ---"""
+
+# Inyectamos el costo formateado de manera segura
+prompt_text = prompt_template.format(cost_value=f"${operator_net_cost:,.2f}")
+
+st.text_area("Click anywhere inside this box, press Ctrl+A and Ctrl+C to copy your AI Copilot Prompt:", value=prompt_text, height=350)
+
+# --- SIDEBAR INFO ---
+st.sidebar.markdown("---")
+st.sidebar.caption("Thrust Aviation Copilot v2.5")
+st.sidebar.info("Compliant with Section 5, 9, 12, and 26 of the Master Agreement.")
