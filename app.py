@@ -1,23 +1,7 @@
 import streamlit as st
-import sys
-
-# --- MÓDULO DE AUTO-INSTALACIÓN IN LINE ---
-# Instala las librerías directamente si Streamlit Cloud no las encuentra
-try:
-    import pypdf
-except ImportError:
-    import os
-    os.system(f"{sys.executable} -m pip install pypdf")
-    import pypdf
-
-try:
-    from openai import OpenAI
-except ImportError:
-    import os
-    os.system(f"{sys.executable} -m pip install openai")
-    from openai import OpenAI
-
+import pypdf
 import re
+from openai import OpenAI
 
 # --- CONFIGURACIÓN DE LA PÁGINA ---
 st.set_page_config(page_title="Thrust Aviation - AI Live Auditor", layout="wide")
@@ -148,4 +132,4 @@ else:
     st.warning("📥 Please upload BOTH the Operator and Client PDF contracts above to execute the real-time AI compliance audit.")
 
 st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation Live AI Engine v2.1")
+st.sidebar.caption("Thrust Aviation Live AI Engine v2.2")
