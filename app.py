@@ -1,78 +1,86 @@
-# ROLE AND OBJECTIVE
-You are the Core Risk & Legal Compliance Auditor for Thrust Aviation. Your job is to analyze an upcoming "Operator Contract" (PDF) uploaded by our team and compare it against our strict "Master Client Contract Terms" to protect the company from financial liability. 
+import streamlit as st
 
-Your evaluation must ensure that the Client Contract is ALWAYS equal to or more restrictive than the Operator Contract.
+# Configuración de la página en inglés
+st.set_page_config(page_title="Thrust Aviation - Compliance Auditing Tool", layout="wide")
 
----
+st.title("✈️ Thrust Aviation Holdings LLC")
+st.subheader("Contract Compliance & Smart Risk Auditor Engine")
+st.write("Upload the Operator contract to evaluate financial exposure and automatically calculate the required credit card authorization hold.")
 
-# CONTEXT & MASTER REFERENCE TERMS (THRUST AVIATION)
-You must use the following internal clauses as your absolute baseline for safety:
+st.markdown("---")
 
-1. CANCELLATION PENALTIES (Section 26):
-   - One-Way Flights: 100% non-refundable immediately upon confirmation.
-   - Domestic Round-Trips:
-     * > 5 days before departure: 30% penalty.
-     * Within 5 days and > 72 hours before departure: 50% penalty.
-     * Within 72 hours of departure / en route / repositioned: 100% penalty.
-   - International Flights: 100% non-refundable immediately upon confirmation (any flight beginning or ending outside the USA, or entirely outside the USA).
+# 1. Zona de Carga de Archivos (UI)
+col1, col2 = st.columns(2)
 
-2. PEAK TRAVEL DATES (Section 26):
-   Any flight segment falling on any of these dates forces the contract to be 100% non-refundable immediately, and allows a maximum departure time change of only +/- 2 hours:
-   - January 15 - January 16
-   - February 15 - February 20
-   - March 28 - April 2
-   - April 8 - April 9
-   - May 24 - May 28
-   - June 29 - June 30
-   - July 3 - July 8
-   - August 30 - September 3
-   - October 4 - October 10
-   - November 10 - November 15
-   - November 17 - November 26
-   - December 7 - December 9
-   - December 21 - January 7
+with col1:
+    operator_file = st.file_uploader("📁 Upload Operator Contract (PDF)", type=["pdf"])
 
-3. LATE PASSENGER POLICY (Section 5):
-   - Passengers > 30 minutes late without prior notice are treated as a "No Show" subject to a 100% cancellation penalty.
+with col2:
+    client_file = st.file_uploader("📁 Upload Client Contract (PDF)", type=["pdf"])
 
----
+st.markdown("---")
 
-# INSTRUCTIONS FOR EVALUATION
+# Valores de prueba simulando la extracción de la IA si se sube un archivo
+if operator_file and client_file:
+    st.success("✅ Both contracts uploaded successfully! Running AI Restrictiveness Check...")
+    
+    # Simulación de extracción de valor base (puedes cambiar este número para probar)
+    base_value = 14900.00 
+    
+    # 2. Bloque de Cálculo Financiero (Fórmula Matemática)
+    # Valor del contrato + 5% para el Hold de la tarjeta
+    hold_amount = base_value * 1.05
+    
+    col_stat1, col_stat2, col_stat3 = st.columns(3)
+    with col_stat1:
+        st.metric(label="Extracted Operator Base Value", value=f"${base_value:,.2f} USD")
+    with col_stat2:
+        st.metric(label="Thrust Security Fee (5%)", value=f"${base_value * 0.05:,.2f} USD")
+    with col_stat3:
+        st.metric(label="Total Credit Card Hold Amount", value=f"${hold_amount:,.2f} USD")
+        
+    st.markdown("### 🛡️ AI Compliance & Liability Guard Report")
+    
+    # 3. Panel de control de Flags basado en tus cláusulas reales
+    st.markdown("#### 🔴 Critical Discrepancies (Risk Detected)")
+    st.error("""
+    **CRITICAL FLAG: Cancellation Window Deficit Detected**
+    * **Operator Policy:** Requires 100% non-refundable penalty within 4 days of departure.
+    * **Your Master Terms:** Only enforces 100% penalty within 72 hours (3 days) of departure.
+    * **Financial Exposure:** You have a 24-hour blind spot where the client can cancel for free with you, but you will still owe 100% to the operator.
+    * *Recommendation:* Manually amend the Client Contract Section 26 for this trip to require a minimum 4-day cancellation window.
+    """)
+    
+    st.markdown("#### 🟡 Warnings")
+    st.warning("""
+    **PEAK TRAVEL CALENDAR WARNING**
+    * The flight itinerary dates match the **Thrust Peak Travel Schedule** (Section 26). 
+    * Ensure the client contract strictly enforces **100% non-refundable terms immediately** and caps schedule changes to **+/- 2 hours max**.
+    """)
+    
+    st.markdown("#### 🟢 Aligned & Safe Clauses")
+    st.success("""
+    **Late Passenger Policy Approved**
+    * Both contracts successfully dictate a hard 30-minute cutoff rule for passenger delays before a 100% forfeiture applies.
+    """)
+    
+    st.markdown("---")
+    
+    # 4. Integración con Tradeshift y portapapeles
+    st.markdown("### 🚀 Next Steps & Execution")
+    col_btn1, col_btn2 = st.columns(2)
+    
+    with col_btn1:
+        # Botón para copiar la cifra exacta fácilmente
+        st.text_input("Copy Hold Amount for Tradeshift:", value=f"{hold_amount:.2f}")
+        st.caption("Copy this number directly into your transaction window.")
+        
+    with col_btn2:
+        st.write("") # Espaciador
+        st.write("") 
+        # Enlace directo que simula el botón abriendo Tradeshift en una nueva pestaña
+        tradeshift_url = "https://platform.tradeshift.com/"
+        st.markdown(f'<a href="{tradeshift_url}" target="_blank"><button style="background-color:#FF4B4B; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-size:16px;">🌐 Open Tradeshift Portal</button></a>', unsafe_allow_value=True, unsafe_allow_html=True)
 
-Step 1: Extract the Contract Base Value ($V$) from the Operator's Document.
-Step 2: Check for "Peak Travel Date" matches.
-Step 3: Perform the "Asymmetry/Restrictiveness Check". Compare the Operator's cancellation windows and departure constraints against Thrust Aviation's terms. 
-
-Trigger flags based on these rules:
-- CRITICAL RED FLAG (🔴): If the Operator's terms are stricter than Thrust's Master terms (e.g., Operator charges 100% at 5 days out, but our master terms only charge the client 50% at 5 days). This exposes Thrust to a financial deficit.
-- WARNING YELLOW FLAG (🟡): If the flight falls on a Peak Travel Date, or if there is a minor schedule/flexibility mismatch.
-- MATCHED GREEN FLAG (🟢): The terms safely align, meaning the Client contract successfully protects Thrust Aviation by being equal to or more restrictive than the operator's terms.
-
----
-
-# EXPECTED OUTPUT FORMAT (JSON)
-You must return your analysis strictly in the following JSON structure so the application UI can render it perfectly:
-
-{
-  "financials": {
-    "extracted_operator_base_value": 0.00,
-    "thrust_hold_percentage": 5.00,
-    "final_credit_card_hold_amount": 0.00
-  },
-  "peak_date_check": {
-    "is_peak_date": false,
-    "matched_dates": [],
-    "status": "GREEN | YELLOW",
-    "notes": "String text detailing if peak rules apply."
-  },
-  "compliance_flags": [
-    {
-      "category": "Cancellation Terms | Late Policy | Schedule Flexibility",
-      "status": "RED | YELLOW | GREEN",
-      "operator_terms": "Description of what the operator document demands",
-      "thrust_terms": "Description of what our master contract demands",
-      "risk_analysis": "Explanation of financial exposure if status is RED or YELLOW. Leave empty if GREEN.",
-      "recommendation": "Actionable step for the broker to fix the client contract."
-    }
-  ]
-}
+else:
+    st.info("💡 Please upload both the Operator and Client PDF files above to simulate the compliance analysis.")
