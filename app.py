@@ -63,8 +63,26 @@ if op_file and cl_file:
     # --- AUDITORÍA DE CLÁUSULAS ---
     st.subheader("🛡️ Compliance Risk Assessment")
     
+    # Líneas unificadas sin saltos físicos de Enter para evitar el SyntaxZError
     st.error("**🔴 CRITICAL: Cancellation Window Exposure**\n\n- **Operator Requirement:** 100% penalty within 4 days.\n- **Your Master Terms:** 100% penalty within 3 days (72h).\n- **Risk:** You are unprotected for 24 hours. The client could cancel without penalty while you still owe the operator.")
 
     st.warning("**🟡 WARNING: Peak Travel Dates Detected**\n\n- The flight dates coincide with **Thrust Peak Dates** (Section 26).\n- **Requirement:** Ensure client contract is marked as **100% Non-Refundable** and departure time change is capped at **+/- 2 hours**.")
 
-    st.success("**🟢 ALIGNED: Late Passenger Policy**\n\n
+    st.success("**🟢 ALIGNED: Late Passenger Policy**\n\n- Both contracts enforce the 30-minute 'No Show' rule. No risk detected.")
+
+    st.divider()
+
+    # --- EJECUCIÓN Y PORTAL DE TRADESHIFT ---
+    st.subheader("🚀 Next Steps")
+    col_btn1, col_btn2 = st.columns(2)
+
+    with col_btn1:
+        st.write("Confirm amount to process in Tradeshift:")
+        st.text_input("Hold Figure to Copy:", value=f"{total_hold:.2f}", key="hold_val")
+        st.caption("Copy this exact amount into your transaction window.")
+
+    with col_btn2:
+        st.write("Launch Portal:")
+        tradeshift_url = "https://platform.tradeshift.com/"
+        st.markdown(
+            f'<a href="{tradeshift_
