@@ -1,99 +1,89 @@
 import streamlit as st
-import re
 
-# --- CONFIGURACIÓN DE LA PÁGINA ---
-st.set_page_config(page_title="Thrust Aviation - Compliance Copilot", layout="wide")
+# Configuración de la página en inglés
+st.set_page_config(page_title="Thrust Aviation - Compliance Auditing Tool", layout="wide")
 
-# URL del Logo de la empresa
-LOGO_URL = "https://placehold.co/600x150/1a1a1a/ffffff?text=THRUST+AVIATION+LOGO"
-
-# --- ENCABEZADO ---
-st.image(LOGO_URL, width=400)
 st.title("✈️ Thrust Aviation Holdings LLC")
-st.subheader("Contract Compliance Copilot & Hold Calculator")
-st.markdown("Calculate the required **4% credit card authorization hold** on operator costs and generate AI audit prompts instantly.")
+st.subheader("Contract Compliance & Smart Risk Auditor Engine")
+st.write("Upload the Operator contract to evaluate financial exposure and automatically calculate the required credit card authorization hold.")
 
-st.divider()
+st.markdown("---")
 
-# --- PANEL DE CONTROL COMPACTO ---
-col_input, col_calc = st.columns([1, 1])
-
-with col_input:
-    st.markdown("### 📥 1. Financial Input")
-    operator_cost_input = st.text_input("Enter Operator Contract Net Cost ($USD):", value="14900.00")
-    
-    # Limpieza básica del número ingresado
-    clean_string = re.sub(r'[^\d.]', '', operator_cost_input)
-    try:
-        operator_net_cost = float(clean_string) if clean_string else 0.0
-    except ValueError:
-        operator_net_cost = 0.0
-
-with col_calc:
-    st.markdown("### 💳 2. Credit Card Hold Formula (4%)")
-    cc_rate = 0.04
-    calculated_fee = operator_net_cost * cc_rate
-    total_cc_hold = operator_net_cost + calculated_fee
-    
-    st.metric(label="TOTAL CC HOLD AMOUNT (Target for Tradeshift)", value=f"${total_cc_hold:,.2f} USD", delta=f"+4% CC Fee: ${calculated_fee:,.2f} USD")
-
-st.divider()
-
-# --- ÁREA DE TRABAJO E INTEGRACIÓN ---
-st.markdown("### 🚀 3. Execution & Portals")
-col_btn1, col_btn2 = st.columns(2)
+# 1. Zona de Carga de Archivos (UI)
+col1, col2 = st.columns(2)
 
 with col_btn1:
-    st.write("Copy calculated figure for your records:")
-    st.text_input("Amount to process:", value=f"{total_cc_hold:.2f}", key="hold_val")
-    st.caption("Copy this clean number directly into Tradeshift.")
+        # Botón para copiar la cifra exacta fácilmente
+        st.text_input("Copy Hold Amount for Tradeshift:", value=f"{hold_amount:.2f}")
+        st.caption("Copy this number directly into your transaction window.")
+        
+    with col_btn2:
+        st.write("") # Espaciador
+        st.write("") 
+        # Enlace directo corregido y alineado
+        tradeshift_url = "https://platform.tradeshift.com/"
+        st.markdown(f'<a href="{tradeshift_url}" target="_blank"><button style="background-color:#FF4B4B; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-size:16px;">🌐 Open Tradeshift Portal</button></a>', unsafe_allow_html=True)
+# Valores de prueba simulando la extracción de la IA si se sube un archivo
+if operator_file and client_file:
+    st.success("✅ Both contracts uploaded successfully! Running AI Restrictiveness Check...")
+    
+    # Simulación de extracción de valor base (puedes cambiar este número para probar)
+    base_value = 14900.00 
+    
+    # 2. Bloque de Cálculo Financiero (Fórmula Matemática)
+    # Valor del contrato + 5% para el Hold de la tarjeta
+    hold_amount = base_value * 1.05
+    
+    col_stat1, col_stat2, col_stat3 = st.columns(3)
+    with col_stat1:
+        st.metric(label="Extracted Operator Base Value", value=f"${base_value:,.2f} USD")
+    with col_stat2:
+        st.metric(label="Thrust Security Fee (5%)", value=f"${base_value * 0.05:,.2f} USD")
+    with col_stat3:
+        st.metric(label="Total Credit Card Hold Amount", value=f"${hold_amount:,.2f} USD")
+        
+    st.markdown("### 🛡️ AI Compliance & Liability Guard Report")
+    
+    # 3. Panel de control de Flags basado en tus cláusulas reales
+    st.markdown("#### 🔴 Critical Discrepancies (Risk Detected)")
+    st.error("""
+    **CRITICAL FLAG: Cancellation Window Deficit Detected**
+    * **Operator Policy:** Requires 100% non-refundable penalty within 4 days of departure.
+    * **Your Master Terms:** Only enforces 100% penalty within 72 hours (3 days) of departure.
+    * **Financial Exposure:** You have a 24-hour blind spot where the client can cancel for free with you, but you will still owe 100% to the operator.
+    * *Recommendation:* Manually amend the Client Contract Section 26 for this trip to require a minimum 4-day cancellation window.
+    """)
+    
+    st.markdown("#### 🟡 Warnings")
+    st.warning("""
+    **PEAK TRAVEL CALENDAR WARNING**
+    * The flight itinerary dates match the **Thrust Peak Travel Schedule** (Section 26). 
+    * Ensure the client contract strictly enforces **100% non-refundable terms immediately** and caps schedule changes to **+/- 2 hours max**.
+    """)
+    
+    st.markdown("#### 🟢 Aligned & Safe Clauses")
+    st.success("""
+    **Late Passenger Policy Approved**
+    * Both contracts successfully dictate a hard 30-minute cutoff rule for passenger delays before a 100% forfeiture applies.
+    """)
+    
+    st.markdown("---")
+    
+    # 4. Integración con Tradeshift y portapapeles
+    st.markdown("### 🚀 Next Steps & Execution")
+    col_btn1, col_btn2 = st.columns(2)
+    
+    with col_btn1:
+        # Botón para copiar la cifra exacta fácilmente
+        st.text_input("Copy Hold Amount for Tradeshift:", value=f"{hold_amount:.2f}")
+        st.caption("Copy this number directly into your transaction window.")
+        
+    with col_btn2:
+        st.write("") # Espaciador
+        st.write("") 
+        # Enlace directo que simula el botón abriendo Tradeshift en una nueva pestaña
+        tradeshift_url = "https://platform.tradeshift.com/"
+       st.markdown(f'<a href="{tradeshift_url}" target="_blank"><button style="background-color:#FF4B4B; color:white; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-size:16px;">🌐 Open Tradeshift Portal</button></a>', unsafe_allow_html=True)
 
-with col_btn2:
-    st.write("Launch Portal:")
-    tradeshift_url = "https://platform.tradeshift.com/"
-    st.markdown(
-        f'<a href="{tradeshift_url}" target="_blank">'
-        f'<button style="background-color:#FF4B4B; color:white; border:none; padding:12px 24px; '
-        f'border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px;">'
-        f'🌐 Open Tradeshift Portal</button></a>', 
-        unsafe_allow_html=True
-    )
-
-st.divider()
-
-# --- GENERADOR DE PROMPTS DE COMPLIANCE ---
-st.markdown("### 🛡️ 4. AI Compliance Auditor Prompt Generator")
-st.write("Copy this customized system prompt and paste it into ChatGPT, Gemini, or Claude along with the text from your contracts to get a full risk analysis instantly.")
-
-# Quitamos la 'f' del string para evitar conflictos de llaves y usamos .format() al final
-prompt_template = """You are the Core Risk & Legal Compliance Auditor for Thrust Aviation. 
-Analyze the upcoming "Operator Contract" and compare it against our strict "Master Client Contract Terms" to protect us from financial liability.
-
-OUR GOLDEN RULE:
-The Client Contract must ALWAYS be MORE RESTRICTIVE or EQUAL to the Operator Contract.
-
-CRITICAL CLAUSES TO VERIFY:
-1. Cancellation Penalties (Section 26):
-   - One-Way Flights: 100% non-refundable immediately upon confirmation.
-   - Domestic Round-Trips: > 5 days out = 30% fee | 5 days to 72 hours out = 50% fee | Within 72 hours = 100% fee.
-   - International Flights: 100% non-refundable immediately.
-2. Peak Travel Dates (Section 26): Any flight segment touching peak travel windows forces 100% non-refundable terms instantly and restricts schedule changes to max +/- 2 hours (Section 12).
-3. Late Passenger Policy (Section 5): Passengers > 30 minutes late without prior notice are a "No Show" subject to a 100% cancellation penalty.
-
-The current target calculation for this specific contract has been set at a base operator cost of: {cost_value} USD.
-
-Please analyze the texts below and flag any 'CRITICAL DEFICIT' (if the client contract is less restrictive than the operator's), 'WARNING', or 'ALIGNED' status.
-
---- PASTE OPERATOR CONTRACT TEXT HERE ---
-
---- PASTE CLIENT CONTRACT TEXT HERE ---"""
-
-# Inyectamos el costo formateado de manera segura
-prompt_text = prompt_template.format(cost_value=f"${operator_net_cost:,.2f}")
-
-st.text_area("Click anywhere inside this box, press Ctrl+A and Ctrl+C to copy your AI Copilot Prompt:", value=prompt_text, height=350)
-
-# --- SIDEBAR INFO ---
-st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation Copilot v2.5")
-st.sidebar.info("Compliant with Section 5, 9, 12, and 26 of the Master Agreement.")
+else:
+    st.info("💡 Please upload both the Operator and Client PDF files above to simulate the compliance analysis.")
