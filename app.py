@@ -122,11 +122,14 @@ if op_text_manual.strip():
                 "Authorization": f"Bearer {api_key}"
             }
             
+            # --- UPDATED PROMPT FOR STRICT RESTRICTION LOGIC ---
             prompt = f"""
             You are the Risk Auditor for Thrust Aviation. 
             Compare the OPERATOR CANCELLATION TERMS against THRUST AVIATION MASTER TERMS (SECTION 26).
             
-            RULE: Thrust must ALWAYS be fully protected. If the Operator imposes a higher penalty than what Thrust charges its Client at any point, THRUST IS EXPOSED TO FINANCIAL LOSS.
+            CORE DIRECTIVE: To protect itself from claims and financial exposure, Thrust Aviation's terms MUST ALWAYS be equal to or MORE RESTRICTIVE than the Operator's terms. 
+            - If Thrust's penalty is HIGHER or applies EARLIER than the Operator's penalty, Thrust is PROTECTED (this is the goal).
+            - If the Operator imposes a stricter penalty or a longer non-refundable window than what Thrust charges its Client, THRUST IS EXPOSED TO FINANCIAL LOSS.
 
             {THRUST_MASTER_POLICY}
 
@@ -134,10 +137,10 @@ if op_text_manual.strip():
             {operator_content}
 
             Format your response in markdown:
-            1. State clearly if Thrust is PROTECTED or EXPOSED.
-            2. Use 🔴 CRITICAL for gaps where the Operator charges more than Thrust collects from the client.
+            1. State clearly if Thrust is PROTECTED or EXPOSED based on the Core Directive.
+            2. Use 🔴 CRITICAL for gaps where the Operator is more restrictive than Thrust (meaning Thrust loses money if the client cancels).
             3. Use 🟡 WARNING for Peak Date or International flight risks.
-            4. Use 🟢 ALIGNED for terms where Thrust is fully protected.
+            4. Use 🟢 ALIGNED for terms where Thrust is MORE RESTRICTIVE or equal to the Operator, meaning Thrust is successfully protected from claims.
             """
             
             data = {
@@ -177,7 +180,7 @@ else:
 
 # --- FOOTER ---
 st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation Internal Risk Tool v3.4")
+st.sidebar.caption("Thrust Aviation Internal Risk Tool v3.5")
 st.sidebar.info("Bounded by Thrust Aviation Section 26 Master Terms.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
