@@ -33,13 +33,30 @@ st.markdown("Automated comparison: **Thrust Master Terms (Section 26)** vs. **Op
 
 st.divider()
 
-# --- RETRIEVE API KEY FROM STREAMLIT SECRETS ---
+# --- SIDEBAR: DUAL API KEY RESOLUTION (SECRETS FIRST, FALLBACK TO SIDEBAR INPUT) ---
+st.sidebar.markdown("## 🤖 AI Engine Settings")
+
+# 1. Try fetching from Streamlit Secrets
+secret_key = None
 try:
-    api_key = st.secrets["OPENAI_API_KEY"]
-    st.sidebar.success("⚡ Live AI Risk Analysis Active")
+    secret_key = st.secrets.get("OPENAI_API_KEY", None)
 except Exception:
-    api_key = None
-    st.sidebar.warning("⚠️ Running in Static Mode. Configure OPENAI_API_KEY in Streamlit Secrets.")
+    secret_key = None
+
+# 2. Provide Sidebar Input Box as secondary option / override
+manual_key = st.sidebar.text_input(
+    "OpenAI API Key (sk-...):", 
+    type="password", 
+    help="Enter key if not configured in Streamlit Secrets"
+)
+
+# 3. Resolve active key
+api_key = manual_key.strip() if manual_key.strip() else secret_key
+
+if api_key:
+    st.sidebar.success("⚡ Live AI Risk Analysis Active")
+else:
+    st.sidebar.warning("⚠️ Running in Static Mode. Enter API Key above or set up Streamlit Secrets.")
 
 st.sidebar.markdown("---")
 with st.sidebar.expander("📌 View Fixed Thrust Terms (Sec. 26)"):
@@ -86,7 +103,7 @@ if op_text_manual.strip():
     operator_content = op_text_manual.strip()
 
     if not api_key:
-        st.caption("ℹ️ *Displaying baseline simulation rules. Configure OPENAI_API_KEY in Streamlit Secrets to activate live AI analysis.*")
+        st.caption("ℹ️ *Displaying baseline simulation rules. Insert API Key in the sidebar or Secrets to trigger live AI analysis.*")
         st.error("""
         **🔴 CRITICAL EXPOSURE: Cancellation Window Gap (Static Baseline)**
         - **Operator Policy:** 100% penalty within 4 days (96h).
@@ -160,7 +177,7 @@ else:
 
 # --- FOOTER ---
 st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation Internal Risk Tool v3.3")
+st.sidebar.caption("Thrust Aviation Internal Risk Tool v3.4")
 st.sidebar.info("Bounded by Thrust Aviation Section 26 Master Terms.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
