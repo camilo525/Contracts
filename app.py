@@ -10,9 +10,11 @@ st.set_page_config(page_title="Thrust Aviation - High-Precision Risk Auditor", l
 LOGO_URL = "https://thrust-aviation.com/wp-content/uploads/2024/02/Logo-White-500-2-e1710003051285.png"
 ARGUS_LOGO_URL = "https://static.wixstatic.com/media/5f5db0_79cb7a5853cb4172a71c7dfeefc32051~mv2.png/v1/crop/x_132,y_105,w_736,h_857/fill/w_546,h_636,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Certified%20Charter%20Broker%20Logo-resized.png"
 
-# --- OFFICIAL SAFETY REGISTRY DIRECTORIES ---
+# --- OFFICIAL EXTERNAL PORTALS ---
 ARGUS_DIRECTORY_URL = "https://www.argus.aero/operatorregistry"
 WYVERN_DIRECTORY_URL = "https://app.wyvern.systems/public/directory/wingman"
+EFD_HOLDS_URL = "https://efd.thrust-aviation.com/#holds"
+TRADESHIFT_URL = "https://platform.tradeshift.com/"
 
 # --- COMPREHENSIVE THRUST AVIATION MASTER TERMS (SECTION 26) ---
 THRUST_MASTER_POLICY = """
@@ -45,7 +47,7 @@ THRUST AVIATION MASTER TERMS & CONDITIONS (SECTION 26 & COMPLIANCE RULES):
 # --- HEADER ---
 st.image(LOGO_URL, width=400)
 st.title("High-Precision Contract Compliance & Risk Auditor")
-st.markdown("Rigorous Risk Audit: **Thrust Master Terms (Section 26)** vs. **Operator Contract** + **ARGUS / WYVERN Safety Audit**.")
+st.markdown("Rigorous Risk Audit: **Thrust Master Terms (Section 26)** vs. **Operator Contract** + **Comprehensive Operator & Fleet Analysis**.")
 
 st.divider()
 
@@ -85,23 +87,22 @@ op_text_manual = st.text_area(
 
 st.divider()
 
-# --- STEP 2: OPERATOR SAFETY & INCIDENT CHECKER (ARGUS & WYVERN DIRECTORIES) ---
-st.subheader("🔍 Step 2: Operator Incident & Safety History Search (ARGUS & WYVERN Scope)")
+# --- STEP 2: COMPREHENSIVE OPERATOR & FLEET AUDIT (ARGUS & WYVERN SCOPE) ---
+st.subheader("🔍 Step 2: Comprehensive Operator & Fleet Analysis")
 col_sec1, col_sec2 = st.columns([2, 1])
 
 with col_sec1:
     operator_name = st.text_input(
-        "Enter Air Charter / Operator Name to check safety history:", 
-        placeholder="e.g., NetJets, VistaJet, Wheels Up, Flexjet..."
+        "Enter Air Charter / Operator Name for complete fleet & safety audit:", 
+        placeholder="e.g., NetJets, VistaJet, Wheels Up, Flexjet, Clay Lacy..."
     )
 
 with col_sec2:
     st.write(" ")
     st.write(" ")
-    run_safety_check = st.checkbox("Include Detailed Safety & Incident Audit", value=True)
+    run_safety_check = st.checkbox("Include Full Fleet & Operational Scope", value=True)
 
 if operator_name.strip():
-    # Direct launch buttons for ARGUS & WYVERN registries
     st.markdown("### 🌐 Live Registry Inquiry Portals")
     col_link1, col_link2 = st.columns(2)
     
@@ -126,33 +127,47 @@ if operator_name.strip():
     st.markdown("<br>", unsafe_allow_html=True)
 
     if not api_key:
-        st.warning(f"⚠️ Static Mode: Enter an API Key in the sidebar to fetch safety records for **{operator_name}**.")
+        st.warning(f"⚠️ Static Mode: Enter an API Key in the sidebar to fetch full operator records for **{operator_name}**.")
     else:
-        with st.spinner(f"🔍 Cross-referencing ARGUS and WYVERN safety benchmarks for {operator_name}..."):
+        with st.spinner(f"🔍 Executing 360° Fleet & Safety Audit for {operator_name}..."):
             url = "https://api.openai.com/v1/chat/completions"
             headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {api_key}"
             }
             
-            # --- TARGETED ARGUS & WYVERN SAFETY PROMPT ---
             safety_prompt = f"""
-            You are a Senior Aviation Safety Officer for Thrust Aviation auditing the air charter operator: "{operator_name}".
+            You are the Senior Aviation Fleet & Risk Analyst for Thrust Aviation.
+            Conduct a 360-degree comprehensive operational, safety, and fleet audit for the air charter operator: "{operator_name}".
 
-            PRIMARY SCOPE:
-            Inquire and analyze this operator specifically against ARGUS International (https://www.argus.aero/operatorregistry) and WYVERN Systems (https://app.wyvern.systems/public/directory/wingman) safety audit standards.
+            PRIMARY SCOPE OF ANALYSIS:
+            Examine this operator across 5 key operational pillars:
 
-            Provide a high-precision safety assessment covering:
-            1. **ARGUS Audit Rating Status:** Assess expected ARGUS tier (Platinum, Gold Plus, Gold, or Unrated) based on known fleet operational history.
-            2. **WYVERN Safety Rating Status:** Assess expected WYVERN accreditation (Wingman Certified or Registered Operator status).
-            3. **NTSB / FAA Incident & Accident History:** Detail notable accidents, incidents, or FAA enforcement actions. State clearly if the operator has an immaculate safety record.
-            4. **Fleet & Operational Risk Factors:** Identify maintenance compliance patterns, crew qualification risks, or operational red flags.
-            5. **Final Safety Clearance Verdict:** State clearly:
-               - 🟢 **APPROVED (LOW RISK)** - Verified ARGUS/WYVERN standards met with clean record.
-               - 🟡 **CONDITIONAL / ELEVATED RISK** - Manual verification required on ARGUS/WYVERN registries.
-               - 🔴 **HIGH RISK / REJECTED** - History of severe NTSB incidents or lack of safety accreditation.
+            1. **Fleet Profile & Composition:**
+               - Primary aircraft categories operated (e.g., Heavy Jets, Super-Mid, Midsize, Light, Turboprops).
+               - Known flagship models in their fleet (e.g., Bombardier Global, Gulfstream G-Series, Citation X, Challenger, Phenom 300).
+               - Estimated average fleet age profile and operational scale (Floating fleet vs. Base-managed aircraft).
 
-            Use clear markdown headers and bullet points.
+            2. **Safety Accreditation & Audit Status:**
+               - **ARGUS Rating Benchmark:** Expected tier (Platinum, Gold Plus, Gold, or Unrated) based on industry records (https://www.argus.aero/operatorregistry).
+               - **WYVERN Rating Benchmark:** Expected accreditation (Wingman Certified or Registered) based on industry standards (https://app.wyvern.systems/public/directory/wingman).
+               - **IS-BAO Stage:** Operational safety management system maturity.
+
+            3. **Operational History & Regulatory Record:**
+               - **NTSB & FAA Incident Analysis:** Summarize notable historical accidents, incidents, or FAA enforcement actions. Explicitly state if the operator maintains an immaculate safety record.
+               - Pilot training standards (e.g., FlightSafety, CAE simulator training mandates).
+
+            4. **Fleet Dispatch Reliability & Operational Risks:**
+               - Mechanical AOG (Aircraft On Ground) risk indicators based on fleet age/mix.
+               - Sourcing reliability and backup aircraft availability if an AOG occurs.
+
+            5. **Final Operational Clearance Verdict:**
+               - Provide a clear rating:
+                 - 🟢 **APPROVED (LOW RISK)** - Verified top-tier fleet, clean safety record, ARGUS/WYVERN compliant.
+                 - 🟡 **CONDITIONAL / ELEVATED RISK** - Older fleet mix or manual registry verification required.
+                 - 🔴 **HIGH RISK / REJECTED** - History of severe NTSB incidents or regulatory non-compliance.
+
+            Structure your response using clear markdown headers, bold highlights, and bullet points.
             """
             
             data = {
@@ -167,10 +182,10 @@ if operator_name.strip():
                     res_data = json.loads(response.read().decode('utf-8'))
                     safety_result = res_data['choices'][0]['message']['content']
                     
-                    st.info(f"📋 **ARGUS & WYVERN Safety Report: {operator_name}**")
+                    st.info(f"📋 **360° Operator & Fleet Audit Report: {operator_name}**")
                     st.markdown(safety_result)
             except Exception as e:
-                st.error("❌ Failed to fetch safety report. Please verify your OpenAI API Key or network connection.")
+                st.error("❌ Failed to fetch operator report. Please verify your OpenAI API Key or network connection.")
 
 st.divider()
 
@@ -195,12 +210,12 @@ if op_text_manual.strip():
     c1, c2, c3 = st.columns(3)
     c1.metric("Operator Base Value", f"${base_value:,.2f} USD")
     c2.metric("Thrust CC Fee (4%)", f"${security_fee:,.2f} USD")
-    c3.metric("TOTAL CREDIT CARD HOLD", f"${total_hold:,.2f} USD", delta="Target for Tradeshift")
+    c3.metric("TOTAL CREDIT CARD HOLD", f"${total_hold:,.2f} USD", delta="Target for Hold Portal")
 
     st.markdown("---")
 
     # --- STEP 4: RIGOROUS COMPLIANCE & EXPOSURE ASSESSMENT ---
-    st.subheader("🛡️ Deep Legal & Exposure Audit")
+    st.subheader("🛡️ Step 4: Deep Legal & Exposure Audit")
     
     operator_content = op_text_manual.strip()
 
@@ -273,27 +288,50 @@ if op_text_manual.strip():
 
     st.divider()
 
-    # --- STEP 5: TRADESHIFT EXECUTION ---
-    st.subheader("🚀 Next Steps")
-    col_btn1, col_btn2 = st.columns(2)
+    # --- STEP 5: NEXT STEPS & PORTAL EXECUTION ---
+    st.subheader("🚀 Step 5: Next Steps & Credit Card Hold Processing")
+    
+    col_exec1, col_exec2 = st.columns(2)
 
-    with col_btn1:
-        st.write("Confirm amount to process in Tradeshift:")
-        st.text_input("Hold Figure to Copy:", value=f"{total_hold:.2f}", key="hold_val")
-        st.caption("Copy this exact amount into your transaction window.")
+    with col_exec1:
+        st.markdown("### 📋 Copy Total Hold Figure")
+        st.text_input("Exact Credit Card Hold Figure ($USD):", value=f"{total_hold:.2f}", key="hold_val")
+        st.caption("Copy this calculated figure to enter into the credit card hold portal.")
 
-    with col_btn2:
-        st.write("Launch Portal:")
-        tradeshift_url = "https://platform.tradeshift.com/"
-        button_html = f'<a href="{tradeshift_url}" target="_blank"><button style="background-color:#FF4B4B; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px;">🌐 Open Tradeshift Portal</button></a>'
-        st.markdown(button_html, unsafe_allow_html=True)
+    with col_exec2:
+        st.markdown("### 🌐 Action Portals")
+        
+        # Primary Credit Card Hold Action Link
+        efd_button_html = f'''
+        <a href="{EFD_HOLDS_URL}" target="_blank">
+            <button style="background-color:#28a745; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px; width:100%; margin-bottom:12px;">
+                💳 Create Credit Card Hold (EFD Portal)
+            </button>
+        </a>
+        '''
+        st.markdown(efd_button_html, unsafe_allow_html=True)
+        st.caption("Directly process the credit card security hold on `efd.thrust-aviation.com/#holds`.")
+
+        # Secondary Tradeshift Link
+        tradeshift_button_html = f'''
+        <a href="{TRADESHIFT_URL}" target="_blank">
+            <button style="background-color:#4A5568; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:14px; width:100%;">
+                🌐 Open Tradeshift Portal
+            </button>
+        </a>
+        '''
+        st.markdown(tradeshift_button_html, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    with st.expander("📌 Quick Reference Link: EFD Credit Card Hold Portal", expanded=True):
+        st.markdown(f"🔗 **Direct Link to Create Hold:** [{EFD_HOLDS_URL}]({EFD_HOLDS_URL})")
 
 else:
     st.warning("Please paste the Operator contract/cancellation terms in Step 1 to run the compliance audit.")
 
 # --- FOOTER ---
 st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.3")
+st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.6")
 st.sidebar.info("Bounded by Thrust Aviation Section 26 Master Terms.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
