@@ -144,7 +144,7 @@ if op_text_manual.strip():
     
     # --- STEP 3: FINANCIAL INPUT (4% HOLD) ---
     st.subheader("📥 Step 3: Financial Input (Credit Card Hold)")
-    operator_cost_input = st.text_input("Enter Total Price / Wire Total from Operator Contract ($USD):", value="14900.00")
+    operator_cost_input = st.text_input("Enter Total Price / Wire Total from Operator Contract ($USD):", value="")
     
     clean_string = re.sub(r'[^\d.]', '', operator_cost_input)
     try:
