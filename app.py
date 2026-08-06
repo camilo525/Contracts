@@ -10,9 +10,11 @@ st.set_page_config(page_title="Thrust Aviation - High-Precision Risk Auditor", l
 LOGO_URL = "https://placehold.co/600x150/1a1a1a/ffffff?text=THRUST+AVIATION+LOGO"
 ARGUS_LOGO_URL = "https://placehold.co/200x80/1a1a1a/ffffff?text=ARGUS+AUDITED"
 
-# --- OFFICIAL SAFETY REGISTRY DIRECTORIES ---
+# --- OFFICIAL EXTERNAL PORTALS ---
 ARGUS_DIRECTORY_URL = "https://www.argus.aero/operatorregistry"
 WYVERN_DIRECTORY_URL = "https://app.wyvern.systems/public/directory/wingman"
+EFD_HOLDS_URL = "https://efd.thrust-aviation.com/#holds"
+TRADESHIFT_URL = "https://platform.tradeshift.com/"
 
 # --- COMPREHENSIVE THRUST AVIATION MASTER TERMS (SECTION 26) ---
 THRUST_MASTER_POLICY = """
@@ -101,7 +103,6 @@ with col_sec2:
     run_safety_check = st.checkbox("Include Detailed Safety & Incident Audit", value=True)
 
 if operator_name.strip():
-    # Direct launch buttons for ARGUS & WYVERN registries
     st.markdown("### 🌐 Live Registry Inquiry Portals")
     col_link1, col_link2 = st.columns(2)
     
@@ -135,7 +136,6 @@ if operator_name.strip():
                 "Authorization": f"Bearer {api_key}"
             }
             
-            # --- TARGETED ARGUS & WYVERN SAFETY PROMPT ---
             safety_prompt = f"""
             You are a Senior Aviation Safety Officer for Thrust Aviation auditing the air charter operator: "{operator_name}".
 
@@ -195,7 +195,7 @@ if op_text_manual.strip():
     c1, c2, c3 = st.columns(3)
     c1.metric("Operator Base Value", f"${base_value:,.2f} USD")
     c2.metric("Thrust CC Fee (4%)", f"${security_fee:,.2f} USD")
-    c3.metric("TOTAL CREDIT CARD HOLD", f"${total_hold:,.2f} USD", delta="Target for Tradeshift")
+    c3.metric("TOTAL CREDIT CARD HOLD", f"${total_hold:,.2f} USD", delta="Target for Hold Portal")
 
     st.markdown("---")
 
@@ -258,7 +258,7 @@ if op_text_manual.strip():
             
             data = {
                 "model": "gpt-4o-mini",
-                "messages": [{"role": "user", "content": deep_audit_prompt}],
+                "messages": [{"role": "user", "content": prompt}],
                 "temperature": 0.0
             }
             
@@ -273,27 +273,50 @@ if op_text_manual.strip():
 
     st.divider()
 
-    # --- STEP 5: TRADESHIFT EXECUTION ---
-    st.subheader("🚀 Next Steps")
-    col_btn1, col_btn2 = st.columns(2)
+    # --- STEP 5: CREDIT CARD HOLD EXECUTION (EFD & TRADESHIFT PORTALS) ---
+    st.subheader("🚀 Step 5: Process Credit Card Hold")
+    
+    col_exec1, col_exec2 = st.columns(2)
 
-    with col_btn1:
-        st.write("Confirm amount to process in Tradeshift:")
-        st.text_input("Hold Figure to Copy:", value=f"{total_hold:.2f}", key="hold_val")
-        st.caption("Copy this exact amount into your transaction window.")
+    with col_exec1:
+        st.markdown("### 💳 Calculated Hold Figure")
+        st.text_input("Exact Hold Amount to Process ($USD):", value=f"{total_hold:.2f}", key="hold_val")
+        st.caption("Copy this exact figure into the hold portal below.")
 
-    with col_btn2:
-        st.write("Launch Portal:")
-        tradeshift_url = "https://platform.tradeshift.com/"
-        button_html = f'<a href="{tradeshift_url}" target="_blank"><button style="background-color:#FF4B4B; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px;">🌐 Open Tradeshift Portal</button></a>'
-        st.markdown(button_html, unsafe_allow_html=True)
+    with col_exec2:
+        st.markdown("### 🌐 Launch Credit Card Hold Portal")
+        
+        # Primary EFD Hold Button
+        efd_button_html = f'''
+        <a href="{EFD_HOLDS_URL}" target="_blank">
+            <button style="background-color:#28a745; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px; width:100%; margin-bottom:10px;">
+                💳 Run Credit Card Hold (EFD Portal)
+            </button>
+        </a>
+        '''
+        st.markdown(efd_button_html, unsafe_allow_html=True)
+        
+        # Secondary Tradeshift Portal Link
+        tradeshift_button_html = f'''
+        <a href="{TRADESHIFT_URL}" target="_blank">
+            <button style="background-color:#6c757d; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:14px; width:100%;">
+                🌐 Launch Tradeshift Portal
+            </button>
+        </a>
+        '''
+        st.markdown(tradeshift_button_html, unsafe_allow_html=True)
+
+    # Embedded Credit Card Hold Tool Frame
+    with st.expander("📌 Direct Hold Tool Window (EFD Thrust Aviation)", expanded=True):
+        st.caption("Use the launch button above or interact directly via the portal link:")
+        st.markdown(f"🔗 **Direct Portal Link:** [{EFD_HOLDS_URL}]({EFD_HOLDS_URL})")
 
 else:
     st.warning("Please paste the Operator contract/cancellation terms in Step 1 to run the compliance audit.")
 
 # --- FOOTER ---
 st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.3")
+st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.4")
 st.sidebar.info("Bounded by Thrust Aviation Section 26 Master Terms.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
