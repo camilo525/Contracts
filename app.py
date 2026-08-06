@@ -181,23 +181,26 @@ if op_text_manual.strip():
         - Verify if the flight date matches any Thrust Peak Dates (Sec. 26). Peak dates enforce 100% non-refundable status.
         """)
     else:
-        with st.spinner("🤖 Performing rigorous multi-point contractual analysis..."):
+        with st.spinner("🤖 Performing rigorous comparative analysis..."):
             url = "https://api.openai.com/v1/chat/completions"
             headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {api_key}"
             }
             
-            # --- ENHANCED DEEP AUDIT PROMPT ---
+            # --- CORRECTED & STRICT RESTRICTION AUDIT PROMPT ---
             deep_audit_prompt = f"""
             You are the Lead Risk & Compliance Counsel for Thrust Aviation.
-            Conduct a meticulous, multi-step comparative analysis between the OPERATOR TERMS and THRUST AVIATION MASTER TERMS (SECTION 26).
+            Conduct a mathematical and legal comparison between OPERATOR TERMS and THRUST AVIATION MASTER TERMS (SECTION 26).
 
-            PRIMARY DIRECTIVE:
-            Thrust Aviation must be FULLY PROTECTED from out-of-pocket financial losses and legal claims. 
-            To guarantee protection, Thrust's client-facing terms MUST BE EQUAL TO OR MORE RESTRICTIVE than what the Operator imposes on Thrust.
-            - If Thrust charges the client MORE or enforces penalties EARLIER than the Operator charges Thrust, Thrust is PROTECTED (Goal achieved).
-            - If the Operator charges Thrust a penalty at a time/rate where Thrust cannot recover 100% of that cost from the client, THRUST IS EXPOSED.
+            EXPOSURE DEFINITION (CRITICAL - READ CAREFULLY):
+            Financial Exposure happens ONLY when: OPERATOR PENALTY > THRUST CLIENT PENALTY.
+            Meaning: Thrust has to pay the Operator MORE money than Thrust is allowed to collect/retain from the Client.
+
+            RULE OF THUMB FOR PROTECTION:
+            1. If Thrust's penalty is HIGHER than or EQUAL to the Operator's penalty -> THRUST IS FULLY PROTECTED 🟢.
+            2. If the Operator charges $0 penalty / No penalty, and Thrust charges 30% penalty -> THRUST IS FULLY PROTECTED 🟢 (Thrust retains 30% as profit with 0 operator liability). DO NOT FLAG THIS AS AN EXPOSURE.
+            3. If the Operator charges 100% penalty, but Thrust only charges 50% penalty -> THRUST IS EXPOSED 🔴 (Thrust is short 50% out-of-pocket).
 
             {THRUST_MASTER_POLICY}
 
@@ -205,24 +208,23 @@ if op_text_manual.strip():
             {operator_content}
 
             INSTRUCTIONS FOR YOUR AUDIT REPORT:
-            1. **Overall Verdict:** State in bold whether Thrust is **FULLY PROTECTED** or **EXPOSED TO RISK**.
-            2. **Section-by-Section Breakdowns:** Analyze each of the following 5 critical risk categories carefully:
-               - **A. Cancellation Timeline & Penalty Brackets:** Compare lead times (days/hours) and penalty percentages.
-               - **B. Peak Date & Seasonal Multipliers:** Assess if operator peak rules exceed Thrust's standard terms.
-               - **C. Flight Type Restrictions:** Verify one-way vs. round-trip vs. international non-refundable enforcement.
-               - **D. Aircraft Repositioning / En-Route Exposure:** Check how repositioning expenses are handled.
-               - **E. Payment & Chargeback Defensibility:** Ensure credit card hold rules align with Thrust's no-dispute mandate.
-            3. **Flag Breakdown:**
-               - Use 🔴 **CRITICAL GAP** for any area where Operator terms are stricter than Thrust's terms (resulting in unrecoverable financial loss).
-               - Use 🟡 **WARNING / CONDITIONAL RISK** for items requiring manual operational verification (e.g., verifying flight dates against Peak Date list).
-               - Use 🟢 **ALIGNED / PROTECTED** for areas where Thrust's terms are equal to or more restrictive than the Operator's terms.
-            4. **Actionable Recommendation:** Provide explicit instructions for the broker/analyst before issuing the final client contract.
+            1. **Overall Verdict:** State clearly in bold: **FULLY PROTECTED** or **EXPOSED TO FINANCIAL RISK**.
+            2. **Comparative Breakdown:**
+               - **A. Cancellation Timeline & Penalty Comparison:** Compare each timeframe. Explicitly state both penalties (e.g., "Outside 7 days: Operator 0% vs Thrust 30% -> PROTECTED").
+               - **B. Peak Travel Dates:** Note if the flight coincides with Thrust Peak Dates (which enforce 100% non-refundable status).
+               - **C. One-Way / International Rules:** Verify if One-Way or International rules apply (100% non-refundable).
+               - **D. Repositioning & Credit Card Defensibility:** Check positioning costs and chargeback protection.
+            3. **Flag System:**
+               - Use 🔴 **CRITICAL GAP** ONLY if Operator Penalty > Thrust Client Penalty.
+               - Use 🟡 **WARNING / CONDITIONAL RISK** for items needing manual operational check (e.g., peak date verification).
+               - Use 🟢 **ALIGNED / PROTECTED** whenever Thrust Penalty >= Operator Penalty (including when Operator has 0 penalty).
+            4. **Actionable Summary:** Clear summary for the broker.
             """
             
             data = {
                 "model": "gpt-4o-mini",
                 "messages": [{"role": "user", "content": deep_audit_prompt}],
-                "temperature": 0.0  # Set to 0.0 for maximum precision and deterministic legal scoring
+                "temperature": 0.0
             }
             
             try:
@@ -256,7 +258,7 @@ else:
 
 # --- FOOTER ---
 st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.1")
+st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.2")
 st.sidebar.info("Bounded by Thrust Aviation Section 26 Master Terms.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
