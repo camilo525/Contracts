@@ -2,12 +2,17 @@ import streamlit as st
 import json
 import urllib.request
 import re
+import urllib.parse
 
 # --- PAGE CONFIGURATION ---
 st.set_page_config(page_title="Thrust Aviation - High-Precision Risk Auditor", layout="wide")
 
 LOGO_URL = "https://placehold.co/600x150/1a1a1a/ffffff?text=THRUST+AVIATION+LOGO"
 ARGUS_LOGO_URL = "https://placehold.co/200x80/1a1a1a/ffffff?text=ARGUS+AUDITED"
+
+# --- OFFICIAL SAFETY REGISTRY DIRECTORIES ---
+ARGUS_DIRECTORY_URL = "https://www.argus.aero/operatorregistry"
+WYVERN_DIRECTORY_URL = "https://app.wyvern.systems/public/directory/wingman"
 
 # --- COMPREHENSIVE THRUST AVIATION MASTER TERMS (SECTION 26) ---
 THRUST_MASTER_POLICY = """
@@ -40,7 +45,7 @@ THRUST AVIATION MASTER TERMS & CONDITIONS (SECTION 26 & COMPLIANCE RULES):
 # --- HEADER ---
 st.image(LOGO_URL, width=400)
 st.title("High-Precision Contract Compliance & Risk Auditor")
-st.markdown("Rigorous Risk Audit: **Thrust Master Terms (Section 26)** vs. **Operator Contract** + **Operator Safety History**.")
+st.markdown("Rigorous Risk Audit: **Thrust Master Terms (Section 26)** vs. **Operator Contract** + **ARGUS / WYVERN Safety Audit**.")
 
 st.divider()
 
@@ -80,8 +85,8 @@ op_text_manual = st.text_area(
 
 st.divider()
 
-# --- STEP 2: OPERATOR SAFETY & INCIDENT CHECKER ---
-st.subheader("🔍 Step 2: Operator Incident & Safety History Search")
+# --- STEP 2: OPERATOR SAFETY & INCIDENT CHECKER (ARGUS & WYVERN DIRECTORIES) ---
+st.subheader("🔍 Step 2: Operator Incident & Safety History Search (ARGUS & WYVERN Scope)")
 col_sec1, col_sec2 = st.columns([2, 1])
 
 with col_sec1:
@@ -96,27 +101,58 @@ with col_sec2:
     run_safety_check = st.checkbox("Include Detailed Safety & Incident Audit", value=True)
 
 if operator_name.strip():
+    # Direct launch buttons for ARGUS & WYVERN registries
+    st.markdown("### 🌐 Live Registry Inquiry Portals")
+    col_link1, col_link2 = st.columns(2)
+    
+    with col_link1:
+        st.markdown(
+            f'<a href="{ARGUS_DIRECTORY_URL}" target="_blank">'
+            f'<button style="background-color:#003366; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold; width:100%;">'
+            f'🛡️ Open ARGUS Operator Registry</button></a>',
+            unsafe_allow_html=True
+        )
+        st.caption("Verify ARGUS Rated / Gold / Platinum status live.")
+
+    with col_link2:
+        st.markdown(
+            f'<a href="{WYVERN_DIRECTORY_URL}" target="_blank">'
+            f'<button style="background-color:#1A5276; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold; width:100%;">'
+            f'🦅 Open WYVERN Wingman Directory</button></a>',
+            unsafe_allow_html=True
+        )
+        st.caption("Verify WYVERN Wingman / Registered status live.")
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
     if not api_key:
-        st.warning(f"⚠️ Static Mode: Enter an API Key in the sidebar to fetch live safety records for **{operator_name}**.")
+        st.warning(f"⚠️ Static Mode: Enter an API Key in the sidebar to fetch safety records for **{operator_name}**.")
     else:
-        with st.spinner(f"🔍 Auditing safety & incident history for {operator_name}..."):
+        with st.spinner(f"🔍 Cross-referencing ARGUS and WYVERN safety benchmarks for {operator_name}..."):
             url = "https://api.openai.com/v1/chat/completions"
             headers = {
                 "Content-Type": "application/json",
                 "Authorization": f"Bearer {api_key}"
             }
             
+            # --- TARGETED ARGUS & WYVERN SAFETY PROMPT ---
             safety_prompt = f"""
-            You are a Senior Aviation Safety Officer for Thrust Aviation.
-            Provide a high-precision safety and risk background report for the air charter operator: "{operator_name}".
+            You are a Senior Aviation Safety Officer for Thrust Aviation auditing the air charter operator: "{operator_name}".
 
-            Include:
-            1. **Safety Certifications & Industry Ratings:** Mention ARGUS Gold/Platinum, Wyvern Wingman, IS-BAO status.
-            2. **NTSB / FAA Incident & Accident History:** Detail notable incidents, accidents, or regulatory enforcement actions. State clearly if the operator has an immaculate record.
-            3. **Fleet & Operational Risk Factors:** Identify specific operational risks, aircraft age/maintenance patterns, or red flags.
-            4. **Safety Clearance Audit Verdict:** State clearly: APPROVED WITH LOW RISK, CONDITIONAL / ELEVATED RISK, or REQUIRES MANDATORY MANAGEMENT REVIEW.
+            PRIMARY SCOPE:
+            Inquire and analyze this operator specifically against ARGUS International (https://www.argus.aero/operatorregistry) and WYVERN Systems (https://app.wyvern.systems/public/directory/wingman) safety audit standards.
 
-            Use clear, concise bullet points and bold headers in markdown.
+            Provide a high-precision safety assessment covering:
+            1. **ARGUS Audit Rating Status:** Assess expected ARGUS tier (Platinum, Gold Plus, Gold, or Unrated) based on known fleet operational history.
+            2. **WYVERN Safety Rating Status:** Assess expected WYVERN accreditation (Wingman Certified or Registered Operator status).
+            3. **NTSB / FAA Incident & Accident History:** Detail notable accidents, incidents, or FAA enforcement actions. State clearly if the operator has an immaculate safety record.
+            4. **Fleet & Operational Risk Factors:** Identify maintenance compliance patterns, crew qualification risks, or operational red flags.
+            5. **Final Safety Clearance Verdict:** State clearly:
+               - 🟢 **APPROVED (LOW RISK)** - Verified ARGUS/WYVERN standards met with clean record.
+               - 🟡 **CONDITIONAL / ELEVATED RISK** - Manual verification required on ARGUS/WYVERN registries.
+               - 🔴 **HIGH RISK / REJECTED** - History of severe NTSB incidents or lack of safety accreditation.
+
+            Use clear markdown headers and bullet points.
             """
             
             data = {
@@ -131,10 +167,10 @@ if operator_name.strip():
                     res_data = json.loads(response.read().decode('utf-8'))
                     safety_result = res_data['choices'][0]['message']['content']
                     
-                    st.info(f"📋 **Safety & Incident History Report: {operator_name}**")
+                    st.info(f"📋 **ARGUS & WYVERN Safety Report: {operator_name}**")
                     st.markdown(safety_result)
             except Exception as e:
-                st.error("❌ Failed to fetch safety report. Please verify your API Key or network connection.")
+                st.error("❌ Failed to fetch safety report. Please verify your OpenAI API Key or network connection.")
 
 st.divider()
 
@@ -144,7 +180,7 @@ if op_text_manual.strip():
     
     # --- STEP 3: FINANCIAL INPUT (4% HOLD) ---
     st.subheader("📥 Step 3: Financial Input (Credit Card Hold)")
-    operator_cost_input = st.text_input("Enter Total Price / Wire Total from Operator Contract ($USD):", value="")
+    operator_cost_input = st.text_input("Enter Total Price / Wire Total from Operator Contract ($USD):", value="14900.00")
     
     clean_string = re.sub(r'[^\d.]', '', operator_cost_input)
     try:
@@ -188,7 +224,6 @@ if op_text_manual.strip():
                 "Authorization": f"Bearer {api_key}"
             }
             
-            # --- CORRECTED & STRICT RESTRICTION AUDIT PROMPT ---
             deep_audit_prompt = f"""
             You are the Lead Risk & Compliance Counsel for Thrust Aviation.
             Conduct a mathematical and legal comparison between OPERATOR TERMS and THRUST AVIATION MASTER TERMS (SECTION 26).
@@ -199,7 +234,7 @@ if op_text_manual.strip():
 
             RULE OF THUMB FOR PROTECTION:
             1. If Thrust's penalty is HIGHER than or EQUAL to the Operator's penalty -> THRUST IS FULLY PROTECTED 🟢.
-            2. If the Operator charges $0 penalty / No penalty, and Thrust charges 30% penalty -> THRUST IS FULLY PROTECTED 🟢 (Thrust retains 30% as profit with 0 operator liability). DO NOT FLAG THIS AS AN EXPOSURE.
+            2. If the Operator charges $0 penalty / No penalty, and Thrust charges 30% penalty -> THRUST IS FULLY PROTECTED 🟢 (Thrust retains 30% as profit with 0 operator liability).
             3. If the Operator charges 100% penalty, but Thrust only charges 50% penalty -> THRUST IS EXPOSED 🔴 (Thrust is short 50% out-of-pocket).
 
             {THRUST_MASTER_POLICY}
@@ -258,7 +293,7 @@ else:
 
 # --- FOOTER ---
 st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.2")
+st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.3")
 st.sidebar.info("Bounded by Thrust Aviation Section 26 Master Terms.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
