@@ -294,7 +294,9 @@ if op_text_manual.strip():
     col_exec1, col_exec2 = st.columns(2)
 
     with col_exec1:
-          
+        st.markdown("### 📋 Credit Card Hold Figure")
+        st.text_input("Calculated Hold Amount ($USD):", value=f"{total_hold:.2f}", key="hold_val")
+        st.caption("Copy this exact figure into the EFD portal on the right.")
 
     with col_exec2:
         st.markdown("### 🌐 Action Portals")
@@ -329,7 +331,7 @@ else:
 
 # --- FOOTER ---
 st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.6")
+ severe_sidebar_caption = st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.8")
 st.sidebar.info("Bounded by Thrust Aviation Section 26 Master Terms.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
