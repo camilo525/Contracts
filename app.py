@@ -291,20 +291,15 @@ if op_text_manual.strip():
     # --- STEP 5: NEXT STEPS & PORTAL EXECUTION ---
     st.subheader("🚀 Step 5: Next Steps & Credit Card Hold Processing")
     
-    col_exec1, col_exec2 = st.columns(2)
-
-    with col_exec1:
-        st.markdown("### 📋 Credit Card Hold Figure")
-        st.text_input("Calculated Hold Amount ($USD):", value=f"{total_hold:.2f}", key="hold_val")
-        st.caption("Copy this exact figure into the EFD portal on the right.")
-
-    with col_exec2:
-        st.markdown("### 🌐 Action Portals")
-        
+    st.markdown("### 🌐 Action Portals")
+    
+    col_btn1, col_btn2 = st.columns(2)
+    
+    with col_btn1:
         # Primary Credit Card Hold Action Link
         efd_button_html = f'''
         <a href="{EFD_HOLDS_URL}" target="_blank">
-            <button style="background-color:#28a745; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px; width:100%; margin-bottom:12px;">
+            <button style="background-color:#28a745; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px; width:100%; margin-bottom:8px;">
                 💳 Create Credit Card Hold (EFD Portal)
             </button>
         </a>
@@ -312,15 +307,17 @@ if op_text_manual.strip():
         st.markdown(efd_button_html, unsafe_allow_html=True)
         st.caption("Directly process the credit card security hold on `efd.thrust-aviation.com/#holds`.")
 
+    with col_btn2:
         # Secondary Tradeshift Link
         tradeshift_button_html = f'''
         <a href="{TRADESHIFT_URL}" target="_blank">
-            <button style="background-color:#4A5568; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:14px; width:100%;">
+            <button style="background-color:#4A5568; color:white; border:none; padding:12px 24px; border-radius:8px; cursor:pointer; font-weight:bold; font-size:16px; width:100%; margin-bottom:8px;">
                 🌐 Open Tradeshift Portal
             </button>
         </a>
         '''
         st.markdown(tradeshift_button_html, unsafe_allow_html=True)
+        st.caption("Access the Tradeshift invoice & payment portal.")
 
     st.markdown("<br>", unsafe_allow_html=True)
     with st.expander("📌 Quick Reference Link: EFD Credit Card Hold Portal", expanded=True):
@@ -331,7 +328,7 @@ else:
 
 # --- FOOTER ---
 st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.8")
+st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.9")
 st.sidebar.info("Bounded by Thrust Aviation Section 26 Master Terms.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
