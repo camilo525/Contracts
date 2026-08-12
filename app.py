@@ -294,9 +294,7 @@ if op_text_manual.strip():
     col_exec1, col_exec2 = st.columns(2)
 
     with col_exec1:
-        st.markdown("### 📋 Copy Total Hold Figure")
-        st.text_input("Exact Credit Card Hold Figure ($USD):", value=f"{total_hold:.2f}", key="hold_val")
-        st.caption("Copy this calculated figure to enter into the credit card hold portal.")
+          
 
     with col_exec2:
         st.markdown("### 🌐 Action Portals")
