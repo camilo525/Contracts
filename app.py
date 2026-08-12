@@ -319,16 +319,12 @@ if op_text_manual.strip():
         st.markdown(tradeshift_button_html, unsafe_allow_html=True)
         st.caption("Access the Tradeshift invoice & payment portal.")
 
-    st.markdown("<br>", unsafe_allow_html=True)
-    with st.expander("📌 Quick Reference Link: EFD Credit Card Hold Portal", expanded=True):
-        st.markdown(f"🔗 **Direct Link to Create Hold:** [{EFD_HOLDS_URL}]({EFD_HOLDS_URL})")
-
 else:
     st.warning("Please paste the Operator contract/cancellation terms in Step 1 to run the compliance audit.")
 
 # --- FOOTER ---
 st.sidebar.markdown("---")
-st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.9")
+st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v5.0")
 st.sidebar.info("Bounded by Thrust Aviation Section 26 Master Terms.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
