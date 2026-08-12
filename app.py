@@ -331,7 +331,7 @@ else:
 
 # --- FOOTER ---
 st.sidebar.markdown("---")
- severe_sidebar_caption = st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.8")
+st.sidebar.caption("Thrust Aviation High-Precision Risk Auditor v4.8")
 st.sidebar.info("Bounded by Thrust Aviation Section 26 Master Terms.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
